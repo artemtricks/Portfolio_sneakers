@@ -1,24 +1,32 @@
 import React from 'react';
 import styles from './Card.module.scss'
 
-function Card({onClickFavorite, imageUrl, title, price, onPlus}) {
+function Card({id ,imageUrl, title, price, onPlus, onFavorite, favorited = false}) {
     const [isAdded, setIsAdded] = React.useState(false);
+    const [isFavorite, setFavorite] = React.useState(favorited);
+   
     const onClickPlus = () => {
-        onPlus({title, price, imageUrl})
+        onPlus({id, title, price, imageUrl})
         setIsAdded(!isAdded)
     }
 
+    const onClickFavorite = () => {
+        onFavorite({id, title, price, imageUrl})
+        setFavorite(!isFavorite);
+    }
+
+    
     React.useEffect(() => {
         console.log('Изменение');
     }, [isAdded])
 
     return (
     <div className={styles.card}>
-        <div className={styles.favorite} onClick={onClickFavorite}>
-        <img  src="/img/heart-unliked.svg" alt="Unlicked"/>
+        <div className={styles.favorite}  onClick={onClickFavorite} >
+        <img src={isFavorite ? "/img/heart-liked.svg" : "/img/heart-unliked.svg" } alt="Unlicked"/>
         </div>
         
-        <img width={133} height={112} src={imageUrl} alt="sneakers" />
+        <img width={160} height={150} src={imageUrl} alt="sneakers" />
         <h5>{title}</h5>
         <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column">
