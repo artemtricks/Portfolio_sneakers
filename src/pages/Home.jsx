@@ -1,20 +1,22 @@
+
 import Card from '../components/Card';
+
 
 function Home({items,
     serchValue,
-    cartItems,
     setSearchValue,
     onChangeSearchInput,
     onAddToFavorite,
     onAddToCart,
-    isLoading}) {
+    isLoading,
+    }) {
     
+      
     const renderItems = () => {
-      const fakeArr = [{}, {}, {}, {}, {}, {}, {}, {}, {}, {}]
       const filteredItems = items.filter((item) => item.title.toLowerCase().includes(serchValue.toLowerCase())
      
      );
-      return (isLoading ? fakeArr : filteredItems).map((item, index) => (
+      return (isLoading ? [...Array(10).fill({})] : filteredItems).map((item, index) => (
         <Card
        key={index}
        id={item.id}
@@ -24,7 +26,6 @@ function Home({items,
        loading = {isLoading}
        onFavorite={(obj) => onAddToFavorite(obj)}
        onPlus={(obj) => onAddToCart(obj)}
-       added={cartItems.some((obj) => Number(obj.id) === Number(item.id))}
        
         />
      ))
@@ -44,7 +45,7 @@ function Home({items,
           <input onChange={onChangeSearchInput} value={serchValue} placeholder="Поиск" />
         </div>
         </div>
-       {console.log(items, cartItems)} 
+        
         <div className="d-flex flex-wrap">
           {renderItems()}
           </div>

@@ -1,10 +1,17 @@
-import Drawer from './components/Drawer';
+import React from 'react';
+import Drawer from './components/Drawer/index';
 import axios from 'axios';
 import { Routes, Route} from "react-router-dom";
 import Header from './components/Header';
 import Home from './pages/Home';
-import React from 'react';
 import Favorites from './pages/Favorites';
+import Orders from './pages/Orders';
+
+
+import AppContext from './context';
+
+
+
 
 function App() {
 
@@ -33,7 +40,7 @@ function App() {
   }, []);
 
   const onAddToCart  = async (obj) => {
-   console.log(obj);
+   
     try {
     if (cartItems.find((item) => Number(item.id) === Number(obj.id))) {
       axios.delete(`https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart/${obj.id}`)
@@ -56,8 +63,9 @@ function App() {
 
   const onAddToFavorite = async (obj) => {
    try {
-     if(favorites.find(favObj => favObj.id === obj.id)) {
+     if(favorites.find(favObj => Number(favObj.id) === Number(obj.id))) {
     axios.delete(`https://63f36531fe3b595e2ee0f355.mockapi.io/favorite/${obj.id}`)
+    setFavorites(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
   } else {
     const {data} = await axios.post(`https://63f36531fe3b595e2ee0f355.mockapi.io/favorite`, obj)
   setFavorites(prev => [...prev, data])
@@ -72,10 +80,21 @@ function App() {
     setSearchValue(event.target.value);
   }
 
+  const isItemAdded = (id) => {
+    return cartItems.some((obj) => Number(obj.id) === Number(id))
+  }
+
+
+
   return (
+    <AppContext.Provider value={{ items, cartItems, favorites, isItemAdded,  onAddToFavorite, setCartItems, onAddToCart}/*Теперь нам не нужно эти триобъекта прокидывать в пропсы они доступны везде */ }> 
     <div className="wrapper clear">
-      
-      {cartOpened && <Drawer onClose={()=> setCartOpened(false)} items={cartItems} onRemove={onRemoveItem} />}
+    <Drawer 
+      onClose={()=> setCartOpened(false)} 
+      items={cartItems} 
+      onRemove={onRemoveItem}
+      opened={cartOpened}
+    />
       <Header onClickCart={()=> setCartOpened(true)} />
 
      <Routes>
@@ -95,11 +114,18 @@ function App() {
   </Routes>
   <Routes>
 	  <Route path="/favorites" element={
-    <Favorites items={favorites} onAddToFavorite={onAddToFavorite}/>
+    <Favorites />
+    }
+     />
+  </Routes>
+  <Routes>
+	  <Route path="/orders" element={
+    <Orders />
     }
      />
   </Routes>
     </div>
+    </AppContext.Provider>
   );
 }
 

@@ -73,42 +73,6 @@ input {
   width: 200px;
 }
 
-.overlay {
-  position: absolute;
-  width: 100%;
-  height: 100%;
-  left: 0;
-  top: 0;
-  background-color: rgba(0, 0, 0, 0.1);
-  z-index: 1;
-}
-
-.drawer {
-  position: absolute;
-  width: 420px;
-  height: 100%;
-  right: 0;
-  background: #FFFFFF;
-  box-shadow: -10px 4px 24px rgba(0, 0, 0, 0.1);
-  padding: 30px;
-  display: flex;
-  flex-direction: column;
-
-  .cartNotEpty{
-    overflow: auto;
-  }
-
-  .items {
-    flex: 1;
-    overflow: auto;
-    margin-bottom: 40px;
-  }
-}
-
-h2 {
-  margin: 0;
-
-}
 
 .cartTotalBlock {
   ul {
@@ -133,6 +97,10 @@ h2 {
   
   .greenButton {
     position: relative;
+
+    &:disabled {
+      animation: button-loading 0.9s ease-in-out infinite;
+    }
 
     &:hover {
       img {
@@ -162,6 +130,11 @@ h2 {
   font-weight: 500;
   cursor: pointer;
   transition: background 0.1s ease-in-out ;
+
+  &:disabled {
+    background-color: #bebebe;
+    cursor: default;
+  }
 
   &:hover {
     background: lighten(#9DD558, 5%);
@@ -210,6 +183,7 @@ h2 {
 
 .cartEmpty {
   text-align: center;
+  padding: 50% 0 50% 0;
 
   p {
     width: 280px;
@@ -237,6 +211,18 @@ h2 {
   }
 }
 
+@keyframes button-loading {
+  0% {
+    opacity: 1;
+  }
+  50% {
+    opacity: 0.7;
+  }
+  100% {
+    opacity: 1;
+}
+  
+}
 
 
 
