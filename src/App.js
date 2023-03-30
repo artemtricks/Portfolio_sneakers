@@ -121,9 +121,9 @@ function App() {
       opened={cartOpened}
     />
      
-      <Header onClickCart={()=> setCartOpened(true)} />
-   
       
+   
+     <Header onClickCart={()=> setCartOpened(true)} />
 
      <Routes>
 	  <Route path="/" element={
@@ -137,17 +137,18 @@ function App() {
      onAddToCart={onAddToCart}
      isLoading={isLoading}
      />
+     
     }
      />
   </Routes>
   <Routes>
-	  <Route path="/favorites" element={
+	  <Route path="favorites" element={
     <Favorites />
     }
      />
   </Routes>
   <Routes>
-	  <Route path="/orders" element={
+	  <Route path="orders" element={
     <Orders />
     }
      />
