@@ -1,5 +1,6 @@
 
 import Card from '../components/Card';
+import Swip from '../components/Swiper';
 
 
 function Home({items,
@@ -20,6 +21,7 @@ function Home({items,
         <Card
        key={index}
        id={item.id}
+       parentId={item.parentId}
        title={item.title} 
        price={item.price}
        imageUrl={item.imageUrl}
@@ -31,6 +33,8 @@ function Home({items,
      ))
     }
       return (
+        <>
+        <Swip/>
         <div className="content p-40">
         <div className="d-flex align-center mb-40 justify-between" >
         <h1 >{serchValue ? `Поиск по запросу: "${serchValue}"` : `Все кроссовки`}</h1>
@@ -50,6 +54,7 @@ function Home({items,
           {renderItems()}
           </div>
       </div>
+      </>
     );
 }
 
