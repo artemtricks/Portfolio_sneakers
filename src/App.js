@@ -27,7 +27,7 @@ function App() {
     const [cartResponse, itemsResponse, favoritesResponse ] = await Promise.all([
       axios.get('https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart'),
       axios.get('https://6411eb8b6e3ca3175301c8a9.mockapi.io/items'),
-      axios.get('https://63f36531fe3b595e2ee0f355.mockapi.io/favorite'),
+      axios.get('https://641c231ab556e431a8666273.mockapi.io/favorite'),
     ]);
 
    
@@ -89,10 +89,10 @@ function App() {
   const onAddToFavorite = async (obj) => {
    try {
      if(favorites.find(favObj => Number(favObj.id) === Number(obj.id))) {
-    axios.delete(`https://63f36531fe3b595e2ee0f355.mockapi.io/favorite/${obj.id}`)
+    axios.delete(`https://641c231ab556e431a8666273.mockapi.io/favorite/${obj.id}`)
     setFavorites(prev => prev.filter(item => Number(item.id) !== Number(obj.id)))
   } else {
-    const {data} = await axios.post(`https://63f36531fe3b595e2ee0f355.mockapi.io/favorite`, obj)
+    const {data} = await axios.post(`https://641c231ab556e431a8666273.mockapi.io/favorite`, obj)
   setFavorites(prev => [...prev, data])
   
 }} 
