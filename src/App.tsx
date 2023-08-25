@@ -13,6 +13,7 @@ export interface ISneakers {
   imageUrl: string;
   price: number;
   title: string;
+  isFavorite?: boolean;
 }
 
 export interface ICartItems extends ISneakers {
@@ -136,7 +137,7 @@ const App = () => {
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
-          // items={cartItems}
+          items={cartItems}
           onRemove={onRemoveItem}
           opened={cartOpened}
         />

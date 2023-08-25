@@ -11,12 +11,17 @@ type DrawerProps = {
   onRemove: (id: number) => void;
   onClose: (value: React.SetStateAction<boolean>) => void;
   opened: boolean;
+  items: ISneakers[];
 };
 
 const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
 
-const Drawer: React.FC<DrawerProps> = ({ onRemove, onClose, opened }) => {
-  const items: [] = [];
+const Drawer: React.FC<DrawerProps> = ({
+  onRemove,
+  onClose,
+  opened,
+  items,
+}) => {
   const [isOrderComplite, setIsOrderComplite] = React.useState(false);
   const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
   const [isLoading, setIsLoading] = React.useState<boolean>(false);

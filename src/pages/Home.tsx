@@ -39,6 +39,7 @@ const Home: React.FC<HomeProps> = ({
           loading={isLoading}
           onFavorite={(obj) => onAddToFavorite(obj)}
           onPlus={(obj) => onAddToCart(obj)}
+          isFavorite={item.isFavorite}
         />
       )
     );

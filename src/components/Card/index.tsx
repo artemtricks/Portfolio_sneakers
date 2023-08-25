@@ -6,6 +6,7 @@ import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import btnPlusImg from "../../assets/img/btn-plus.svg";
 import btnDoneImg from "../../assets/img/btn-checked.svg";
+import imageImg from "../../assets/sneakers/10.jpg";
 
 type CardProps = {
   id: number;
@@ -14,6 +15,7 @@ type CardProps = {
   price: number;
   loading?: boolean;
   favorited?: boolean;
+  isFavorite?: boolean;
 
   onPlus?: (obj: any) => Promise<void>;
   onFavorite?: (obj: any) => Promise<void>;
@@ -26,19 +28,26 @@ const Card: React.FC<CardProps> = ({
   price,
   onPlus,
   onFavorite,
-  favorited,
+
+  loading,
+  isFavorite,
 }) => {
-  const loading = false;
   const { isItemAdded } = React.useContext(AppContext);
-  const [isFavorite, setFavorite] = React.useState(favorited);
 
   const onClickPlus = () => {
     !!onPlus && onPlus({ id, parentId: id, title, price, imageUrl });
   };
 
   const onClickFavorite = () => {
-    !!onFavorite && onFavorite({ id, parentId: id, title, price, imageUrl });
-    setFavorite(!isFavorite);
+    !!onFavorite &&
+      onFavorite({
+        id,
+        parentId: id,
+        title,
+        price,
+        imageUrl,
+        isFavorite: true,
+      });
   };
 
   return (
@@ -68,7 +77,7 @@ const Card: React.FC<CardProps> = ({
               />
             )}
           </div>
-          <img width={160} height={150} src="/sneakers/1.jpg" alt="sneakers" />
+          <img width={160} height={150} src={imageImg} alt="sneakers" />
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column">

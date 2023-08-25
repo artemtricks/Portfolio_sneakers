@@ -20,6 +20,7 @@ const Favorites = () => {
             price={item.price}
             imageUrl={item.imageUrl}
             onFavorite={onAddToFavorite}
+            isFavorite={item.isFavorite}
           />
         ))}
       </div>
