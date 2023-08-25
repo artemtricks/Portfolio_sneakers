@@ -2,32 +2,44 @@ import React from "react";
 import styles from "./Card.module.scss";
 import ContentLoader from "react-content-loader";
 import AppContext from "../../context";
+import heartLikeImg from "../../assets/img/heart-liked.svg";
+import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
+import btnPlusImg from "../../assets/img/btn-plus.svg";
+import btnDoneImg from "../../assets/img/btn-checked.svg";
 
-function Card({
+type CardProps = {
+  id: number;
+  imageUrl: string;
+  title: string;
+  price: number;
+  loading?: boolean;
+  favorited?: boolean;
+
+  onPlus?: (obj: any) => Promise<void>;
+  onFavorite?: (obj: any) => Promise<void>;
+};
+
+const Card: React.FC<CardProps> = ({
   id,
   imageUrl,
   title,
   price,
   onPlus,
   onFavorite,
-  favorited = false,
-  loading = false,
-}) {
+  favorited,
+}) => {
+  const loading = false;
   const { isItemAdded } = React.useContext(AppContext);
   const [isFavorite, setFavorite] = React.useState(favorited);
 
   const onClickPlus = () => {
-    onPlus({ id, parentId: id, title, price, imageUrl });
+    !!onPlus && onPlus({ id, parentId: id, title, price, imageUrl });
   };
 
   const onClickFavorite = () => {
-    onFavorite({ id, parentId: id, title, price, imageUrl });
+    !!onFavorite && onFavorite({ id, parentId: id, title, price, imageUrl });
     setFavorite(!isFavorite);
   };
-
-  React.useEffect(() => {
-    console.log("Изменение");
-  }, []);
 
   return (
     <div className={styles.card}>
@@ -49,30 +61,25 @@ function Card({
       ) : (
         <>
           <div className={styles.favorite} onClick={onClickFavorite}>
-            {onFavorite && (
+            {!!onFavorite && (
               <img
-                src={
-                  isFavorite ? "img/heart-liked.svg" : "img/heart-unliked.svg"
-                }
+                src={isFavorite ? heartLikeImg : heartUnLikeImg}
                 alt="Unlicked"
               />
             )}
           </div>
-
-          <img width={160} height={150} src={imageUrl} alt="sneakers" />
+          <img width={160} height={150} src="/sneakers/1.jpg" alt="sneakers" />
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column">
               <span>Цена:</span>
               <b>{price} руб.</b>
             </div>
-            {onPlus && (
+            {!!onPlus && (
               <img
                 className={styles.plus}
                 onClick={onClickPlus}
-                src={
-                  isItemAdded(id) ? `img/btn-checked.svg` : `img/btn-plus.svg`
-                }
+                src={isItemAdded(id) ? btnDoneImg : btnPlusImg}
                 alt="Plus"
               />
             )}
@@ -81,6 +88,6 @@ function Card({
       )}
     </div>
   );
-}
+};
 
 export default Card;

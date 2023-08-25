@@ -6,25 +6,35 @@ import Header from "./components/Header";
 import Home from "./pages/Home";
 import Favorites from "./pages/Favorites";
 import Orders from "./pages/Orders";
-
 import AppContext from "./context";
 
-function App() {
-  const [items, setItems] = React.useState([]);
-  const [cartItems, setCartItems] = React.useState([]);
-  const [favorites, setFavorites] = React.useState([]);
-  const [serchValue, setSearchValue] = React.useState("");
-  const [cartOpened, setCartOpened] = React.useState(false);
-  const [isLoading, setIsLoading] = React.useState(true);
+export interface ISneakers {
+  id: number;
+  imageUrl: string;
+  price: number;
+  title: string;
+}
+
+export interface ICartItems extends ISneakers {
+  parentId: number;
+}
+
+const App = () => {
+  const [items, setItems] = React.useState<ISneakers[] | []>([]);
+  const [cartItems, setCartItems] = React.useState<ICartItems[] | []>([]);
+  const [favorites, setFavorites] = React.useState<ISneakers[] | []>([]);
+  const [serchValue, setSearchValue] = React.useState<string>("");
+  const [cartOpened, setCartOpened] = React.useState<boolean>(false);
+  const [isLoading, setIsLoading] = React.useState<boolean>(true);
 
   React.useEffect(() => {
     async function fetchData() {
       try {
         const [cartResponse, itemsResponse, favoritesResponse] =
           await Promise.all([
-            axios.get("https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart"),
-            axios.get("https://6411eb8b6e3ca3175301c8a9.mockapi.io/items"),
-            axios.get("https://641c231ab556e431a8666273.mockapi.io/favorite"),
+            axios.get("https://7c51c28aa165f47d.mokky.dev/Cart"),
+            axios.get("https://7c51c28aa165f47d.mokky.dev/items"),
+            axios.get("https://7c51c28aa165f47d.mokky.dev/favorite"),
           ]);
 
         setIsLoading(false);
@@ -39,7 +49,7 @@ function App() {
     fetchData();
   }, []);
 
-  const onAddToCart = async (obj) => {
+  const onAddToCart = async (obj: ICartItems) => {
     try {
       const findItem = cartItems.find(
         (item) => Number(item.parentId) === Number(obj.id)
@@ -49,12 +59,12 @@ function App() {
           prev.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
         await axios.delete(
-          `https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart/${findItem.id}`
+          `https://7c51c28aa165f47d.mokky.dev/Cart/${findItem.id}`
         );
       } else {
         setCartItems((prev) => [...prev, obj]);
         const { data } = await axios.post(
-          "https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart",
+          "https://7c51c28aa165f47d.mokky.dev/Cart",
           obj
         );
         setCartItems((prev) =>
@@ -74,27 +84,25 @@ function App() {
     }
   };
 
-  const onRemoveItem = (id) => {
+  const onRemoveItem = (id: number) => {
     try {
-      axios.delete(`https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart/${id}`);
+      axios.delete(`https://7c51c28aa165f47d.mokky.dev/Cart/${id}`);
       setCartItems((prev) => prev.filter((item) => item.id !== id)); // number
     } catch (error) {
       alert("Не удалсось удалить кроссовки из корзины");
     }
   };
 
-  const onAddToFavorite = async (obj) => {
+  const onAddToFavorite = async (obj: ISneakers) => {
     try {
       if (favorites.find((favObj) => Number(favObj.id) === Number(obj.id))) {
-        axios.delete(
-          `https://641c231ab556e431a8666273.mockapi.io/favorite/${obj.id}`
-        );
+        axios.delete(`https://7c51c28aa165f47d.mokky.dev/favorite/${obj.id}`);
         setFavorites((prev) =>
           prev.filter((item) => Number(item.id) !== Number(obj.id))
         );
       } else {
         const { data } = await axios.post(
-          `https://641c231ab556e431a8666273.mockapi.io/favorite`,
+          `https://7c51c28aa165f47d.mokky.dev/favorite`,
           obj
         );
         setFavorites((prev) => [...prev, data]);
@@ -104,38 +112,36 @@ function App() {
     }
   };
 
-  const onChangeSearchInput = (event) => {
+  const onChangeSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
   };
 
-  const isItemAdded = (id) => {
+  const isItemAdded = (id: number) => {
     return cartItems.some((obj) => Number(obj.parentId) === Number(id));
   };
 
   return (
     <AppContext.Provider
-      value={
-        {
-          items,
-          cartItems,
-          favorites,
-          isItemAdded,
-          onAddToFavorite,
-          setCartItems,
-          onAddToCart,
-          setCartOpened,
-        } /*Теперь нам не нужно эти триобъекта прокидывать в пропсы они доступны везде */
-      }
+      value={{
+        items,
+        cartItems,
+        favorites,
+        isItemAdded,
+        onAddToFavorite,
+        setCartItems,
+        onAddToCart,
+        setCartOpened,
+      }}
     >
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
-          items={cartItems}
+          // items={cartItems}
           onRemove={onRemoveItem}
           opened={cartOpened}
         />
 
-        <Header onClickCart={() => setCartOpened(true)} />
+        <Header setCartOpened={setCartOpened} />
 
         <Routes>
           <Route
@@ -143,7 +149,6 @@ function App() {
             element={
               <Home
                 items={items}
-                cartItems={cartItems}
                 serchValue={serchValue}
                 setSearchValue={setSearchValue}
                 onChangeSearchInput={onChangeSearchInput}
@@ -163,6 +168,6 @@ function App() {
       </div>
     </AppContext.Provider>
   );
-}
+};
 
 export default App;

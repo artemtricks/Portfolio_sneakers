@@ -3,8 +3,8 @@ import React from "react";
 import { Swiper, SwiperSlide } from "swiper/react";
 import styles from "./Swiper.module.scss";
 import "swiper/css";
-import firstPic from "../../image/1.jpg";
-import secondPic from "../../image/2.jpg";
+import firstPic from "../../assets/1.jpg";
+import secondPic from "../../assets/2.jpg";
 
 export default function Swip() {
   return (

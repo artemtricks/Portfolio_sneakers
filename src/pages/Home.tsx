@@ -1,7 +1,20 @@
 import Card from "../components/Card";
 import Swip from "../components/Swiper";
+import btnRemoveSvg from "../assets/img/btnRemove.svg";
+import searchSvg from "../assets/img/search.svg";
+import { ICartItems, ISneakers } from "../App";
 
-function Home({
+type HomeProps = {
+  items: ISneakers[] | [];
+  serchValue: string;
+  setSearchValue: React.Dispatch<React.SetStateAction<string>>;
+  onChangeSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
+  onAddToFavorite: (obj: ISneakers) => Promise<void>;
+  onAddToCart: (obj: ICartItems) => Promise<void>;
+  isLoading: boolean;
+};
+
+const Home: React.FC<HomeProps> = ({
   items,
   serchValue,
   setSearchValue,
@@ -9,17 +22,17 @@ function Home({
   onAddToFavorite,
   onAddToCart,
   isLoading,
-}) {
+}) => {
   const renderItems = () => {
     const filteredItems = items.filter((item) =>
       item.title.toLowerCase().includes(serchValue.toLowerCase())
     );
+
     return (isLoading ? [...Array(10).fill({})] : filteredItems).map(
       (item, index) => (
         <Card
           key={index}
           id={item.id}
-          parentId={item.parentId}
           title={item.title}
           price={item.price}
           imageUrl={item.imageUrl}
@@ -30,6 +43,7 @@ function Home({
       )
     );
   };
+
   return (
     <>
       <Swip />
@@ -39,11 +53,11 @@ function Home({
             {serchValue ? `Поиск по запросу: "${serchValue}"` : `Все кроссовки`}
           </h1>
           <div className="search-block d-flex">
-            <img src="img/search.svg" alt="Search" />
+            <img src={searchSvg} alt="Search" />
             {serchValue && (
               <img
                 className="clear cu-p"
-                src="img/btnRemove.svg"
+                src={btnRemoveSvg}
                 alt="Clear"
                 onClick={() => setSearchValue("")}
               />
@@ -60,6 +74,6 @@ function Home({
       </div>
     </>
   );
-}
+};
 
 export default Home;

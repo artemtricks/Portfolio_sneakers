@@ -1,8 +1,9 @@
 import React from "react";
 import Card from "../components/Card";
 import AppContext from "../context";
+import { ISneakers } from "../App";
 
-function Favorites() {
+const Favorites = () => {
   const { favorites, onAddToFavorite } = React.useContext(AppContext);
 
   return (
@@ -11,20 +12,19 @@ function Favorites() {
         <h1>Мои закладки</h1>
       </div>
       <div className="d-flex flex-wrap">
-        {favorites.map((item, index) => (
+        {favorites.map((item: ISneakers, index: number) => (
           <Card
             key={index}
             id={item.id}
             title={item.title}
             price={item.price}
             imageUrl={item.imageUrl}
-            favorited={true}
             onFavorite={onAddToFavorite}
           />
         ))}
       </div>
     </div>
   );
-}
+};
 
 export default Favorites;

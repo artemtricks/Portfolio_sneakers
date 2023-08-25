@@ -1,26 +1,32 @@
 import React from "react";
 import Info from "../Info";
-
 import axios from "axios";
 import { useCart } from "../../hooks/useCart";
-
+import btnRemove from "../../assets/img/btnRemove.svg";
+import arrowSvg from "../../assets/img/arrow.svg";
+import { ISneakers } from "../../App";
 import styles from "./Drawer.module.scss";
 
-const delay = (ms) => new Promise((resolve) => setTimeout(resolve, ms));
+type DrawerProps = {
+  onRemove: (id: number) => void;
+  onClose: (value: React.SetStateAction<boolean>) => void;
+  opened: boolean;
+};
 
-function Drawer({ items = [], onRemove, onClose, opened }) {
+const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
+
+const Drawer: React.FC<DrawerProps> = ({ onRemove, onClose, opened }) => {
+  const items: [] = [];
   const [isOrderComplite, setIsOrderComplite] = React.useState(false);
-  //const { cartItems, setCartItems} = React.useContext(AppContext);
-  const [orderId, setOrderId] = React.useState(null);
-  const [isLoading, setIsLoading] = React.useState(false);
-  // const totalPrice = cartItems.reduce((sum, obj) => obj.price + sum, 0);
-  const { cartItems, setCartItems, totalPrice } = useCart(); // кастомный хук юзкарт
+  const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
+  const [isLoading, setIsLoading] = React.useState<boolean>(false);
+  const { cartItems, setCartItems, totalPrice } = useCart();
 
   const onClickOrder = async () => {
     try {
       setIsLoading(true);
       const { data } = await axios.post(
-        "https://641c231ab556e431a8666273.mockapi.io/order",
+        "https://7c51c28aa165f47d.mokky.dev/orders",
         { items: cartItems }
       );
 
@@ -28,9 +34,9 @@ function Drawer({ items = [], onRemove, onClose, opened }) {
       setIsOrderComplite(true);
       setCartItems([]);
       for (let i = 0; i < cartItems.length; i++) {
-        const item = cartItems[i];
+        const item: ISneakers = cartItems[i];
         await axios.delete(
-          "https://6411eb8b6e3ca3175301c8a9.mockapi.io/Cart/" + item.id
+          "https://7c51c28aa165f47d.mokky.dev/Cart/" + item.id
         );
         await delay(1000);
       }
@@ -46,9 +52,9 @@ function Drawer({ items = [], onRemove, onClose, opened }) {
         <h2 className="d-flex mb-30 justify-between">
           Корзина
           <img
-            onClick={onClose}
+            onClick={() => onClose(false)}
             className="cu-p"
-            src="img/btnRemove.svg"
+            src={btnRemove}
             alt="Close"
           />
         </h2>
@@ -56,7 +62,7 @@ function Drawer({ items = [], onRemove, onClose, opened }) {
         {items.length > 0 ? (
           <div className="d-flex flex-column flex cartNotEpty">
             <div className={styles.items}>
-              {items.map((obj) => (
+              {items.map((obj: ISneakers) => (
                 <div
                   key={obj.id}
                   className="cartItem d-flex align-center mb-20"
@@ -73,7 +79,7 @@ function Drawer({ items = [], onRemove, onClose, opened }) {
                   <img
                     onClick={() => onRemove(obj.id)}
                     className="removeBtn"
-                    src="img/btnRemove.svg"
+                    src={btnRemove}
                     alt="Remove"
                   />
                 </div>
@@ -97,26 +103,16 @@ function Drawer({ items = [], onRemove, onClose, opened }) {
                 disabled={isLoading}
                 className="greenButton"
               >
-                Оформить заказ <img src="img/arrow.svg" alt="Arrow" />
+                Оформить заказ <img src={arrowSvg} alt="Arrow" />
               </button>
             </div>
           </div>
         ) : (
-          <Info
-            title={isOrderComplite ? "Заказ оформлен!" : "Корзина пуста"}
-            description={
-              isOrderComplite
-                ? `Ваш заказ #${orderId} скоро будет передан курьерской доставке`
-                : "Добавьте хотябы одну пару кроссовок"
-            }
-            image={
-              isOrderComplite ? "img/order-done.jpg" : "img/cart-drawer.jpg"
-            }
-          />
+          <Info isOrderComplite={isOrderComplite} orderId={orderId} />
         )}
       </div>
     </div>
   );
-}
+};
 
 export default Drawer;
