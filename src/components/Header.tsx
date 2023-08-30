@@ -3,16 +3,13 @@ import { Link } from "react-router-dom";
 import { useCart } from "../hooks/useCart";
 import logoSvg from "../assets/img/logo1.png";
 import cartSvg from "../assets/img/cart.svg";
-import favoriteSvg from "../assets/img/favorite.svg";
 import userSvg from "../assets/img/user.svg";
-import AppContext from "../context";
 
 type HeaderProps = {
   setCartOpened: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
-  const { favorites } = React.useContext(AppContext);
   const { totalPrice } = useCart();
 
   return (
@@ -34,21 +31,16 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
           <img width={18} height={18} src={cartSvg} alt="Корзина" />
           <span>{totalPrice} руб.</span>
         </li>
-        <li>
-          <Link to="/favorites" className="d-flex align-center">
-            <img
-              className="cu-p"
-              width={18}
-              height={18}
-              src={favoriteSvg}
-              alt="Закладки"
-            />
-            <span className="mr-20">{`${favorites.length} шт.`}</span>
-          </Link>
-        </li>
+
         <li>
           <Link to="/orders">
-            <img width={18} height={18} src={userSvg} alt="Пользователь" />
+            <img
+              className="mt-5"
+              width={18}
+              height={18}
+              src={userSvg}
+              alt="Пользователь"
+            />
           </Link>
         </li>
       </ul>

@@ -21,8 +21,6 @@ const Orders: React.FC = () => {
     })();
   }, []);
 
-  console.log(orders, "orders");
-
   return (
     <div className="content p-40">
       <div className="d-flex align-center mb-40 justify-between">

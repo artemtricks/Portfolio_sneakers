@@ -15,13 +15,13 @@ export default function Swip() {
         className={styles.custom}
       >
         <SwiperSlide>
-          <img src={firstPic} alt="Sneakers" />
+          <img src={""} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide>
-          <img src={secondPic} alt="Sneakers" />
+          <img src={""} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>

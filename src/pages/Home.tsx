@@ -1,3 +1,4 @@
+import React from "react";
 import Card from "../components/Card";
 import Swip from "../components/Swiper";
 import btnRemoveSvg from "../assets/img/btnRemove.svg";
@@ -9,7 +10,7 @@ type HomeProps = {
   serchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
   onChangeSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onAddToFavorite: (obj: ISneakers) => Promise<void>;
+
   onAddToCart: (obj: ICartItems) => Promise<void>;
   isLoading: boolean;
 };
@@ -19,7 +20,6 @@ const Home: React.FC<HomeProps> = ({
   serchValue,
   setSearchValue,
   onChangeSearchInput,
-  onAddToFavorite,
   onAddToCart,
   isLoading,
 }) => {
@@ -37,7 +37,6 @@ const Home: React.FC<HomeProps> = ({
           price={item.price}
           imageUrl={item.imageUrl}
           loading={isLoading}
-          onFavorite={(obj) => onAddToFavorite(obj)}
           onPlus={(obj) => onAddToCart(obj)}
           isFavorite={item.isFavorite}
         />
