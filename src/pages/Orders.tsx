@@ -1,24 +1,18 @@
 import React from "react";
 import Card from "../components/Card";
-import axios from "axios";
-import { ICartItems } from "../App";
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "../redux/store";
+import { selectOrderData } from "../redux/order/selector";
+import { fetchOrders } from "../redux/order/orderSlice";
 
 const Orders: React.FC = () => {
-  const [orders, setOrders] = React.useState<ICartItems[] | []>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
+  const dispatch = useAppDispatch();
+  const { order, status } = useSelector(selectOrderData);
+  console.log(order.map((item) => item.items).flat(), "order");
+  const ordersArr = order.map((item) => item.items).flat();
 
   React.useEffect(() => {
-    (async () => {
-      try {
-        const { data } = await axios.get(
-          "https://7c51c28aa165f47d.mokky.dev/orders"
-        );
-        setOrders(data.map((obj: any) => obj.items).flat());
-        setIsLoading(false);
-      } catch (error) {
-        alert("Ошибка при запросе заказов");
-      }
-    })();
+    dispatch(fetchOrders());
   }, []);
 
   return (
@@ -27,16 +21,18 @@ const Orders: React.FC = () => {
         <h1>Мои заказы</h1>
       </div>
       <div className="d-flex flex-wrap">
-        {(isLoading ? [...Array(10).fill({})] : orders).map((item, index) => (
-          <Card
-            key={index}
-            id={item.id}
-            title={item.title}
-            price={item.price}
-            imageUrl={item.imageUrl}
-            loading={isLoading}
-          />
-        ))}
+        {(status === "loading" ? [...Array(10).fill({})] : ordersArr).map(
+          (item, index) => (
+            <Card
+              key={index}
+              id={item.id}
+              title={item.title}
+              price={item.price}
+              imageUrl={item.imageUrl}
+              loading={status === "loading"}
+            />
+          )
+        )}
       </div>
     </div>
   );

@@ -4,10 +4,13 @@ import axios from "axios";
 import { Routes, Route } from "react-router-dom";
 import Header from "./components/Header";
 import Home from "./pages/Home";
-
+import { useSelector } from "react-redux";
+import { useAppDispatch } from "./redux/store";
 import Orders from "./pages/Orders";
 import AppContext from "./context";
 import { NotFound } from "./pages/NotFound";
+import { selectSneakerData } from "./redux/sneaker/selector";
+import { fetchSnekers } from "./redux/sneaker/sneakerSlice";
 
 export interface ISneakers {
   id: number;
@@ -23,7 +26,9 @@ export interface ICartItems extends ISneakers {
 }
 
 const App = () => {
-  const [items, setItems] = React.useState<ISneakers[] | []>([]);
+  const { items: sneakers, status } = useSelector(selectSneakerData);
+  const dispatch = useAppDispatch();
+  // const [items, setItems] = React.useState<ISneakers[] | []>([]);
   const [cartItems, setCartItems] = React.useState<ICartItems[] | []>([]);
   const [serchValue, setSearchValue] = React.useState<string>("");
   const [cartOpened, setCartOpened] = React.useState<boolean>(false);
@@ -31,16 +36,20 @@ const App = () => {
   const [favorited, setFavorited] = React.useState<ISneakers[] | []>([]);
 
   React.useEffect(() => {
+    dispatch(fetchSnekers());
+  }, [dispatch]);
+
+  React.useEffect(() => {
     async function fetchData() {
       try {
-        const [cartResponse, itemsResponse] = await Promise.all([
+        const [cartResponse] = await Promise.all([
           axios.get("https://7c51c28aa165f47d.mokky.dev/Cart"),
-          axios.get("https://7c51c28aa165f47d.mokky.dev/items"),
+          // axios.get("https://7c51c28aa165f47d.mokky.dev/items"),
         ]);
 
         setIsLoading(false);
         setCartItems(cartResponse.data);
-        setItems(itemsResponse.data);
+        // setItems(itemsResponse.data);
       } catch (error) {
         alert("Ошибка при запросе данных");
       }
@@ -84,14 +93,14 @@ const App = () => {
     }
   };
 
-  // const onAddToCart = (obj: ISneakers) => {
-  //   if (items.find((item) => item.id === obj.id && obj.isAddToCart === false)) {
+  // const onAddFavorite = (obj: ISneakers) => {
+  //   if (items.find((item) => item.id === obj.id && obj.isFavorite === false)) {
   //     axios
   //       .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-  //         isAddToCart: true,
+  //         isFavorite: true,
   //       })
   //       .then((response) => {
-  //         setCartItems(response.data);
+  //         setFavorited(response.data);
   //       })
   //       .catch((err) => {
   //         console.log(`не удалось добавить в избранное`, err);
@@ -99,36 +108,13 @@ const App = () => {
   //   } else {
   //     axios
   //       .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-  //         isAddToCart: false,
+  //         isFavorite: false,
   //       })
   //       .then((response) => {
   //         setFavorited(response.data);
   //       });
   //   }
   // };
-
-  const onAddFavorite = (obj: ISneakers) => {
-    if (items.find((item) => item.id === obj.id && obj.isFavorite === false)) {
-      axios
-        .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-          isFavorite: true,
-        })
-        .then((response) => {
-          setFavorited(response.data);
-        })
-        .catch((err) => {
-          console.log(`не удалось добавить в избранное`, err);
-        });
-    } else {
-      axios
-        .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-          isFavorite: false,
-        })
-        .then((response) => {
-          setFavorited(response.data);
-        });
-    }
-  };
 
   const onRemoveItem = (id: number) => {
     try {
@@ -150,20 +136,19 @@ const App = () => {
   return (
     <AppContext.Provider
       value={{
-        items,
         cartItems,
         isItemAdded,
         setCartItems,
         onAddToCart,
         setCartOpened,
-        onAddFavorite,
+
         favorited,
       }}
     >
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
-          items={cartItems}
+          items={sneakers}
           onRemove={onRemoveItem}
           opened={cartOpened}
         />
@@ -173,7 +158,7 @@ const App = () => {
             path="/"
             element={
               <Home
-                items={items}
+                items={sneakers}
                 serchValue={serchValue}
                 setSearchValue={setSearchValue}
                 onChangeSearchInput={onChangeSearchInput}

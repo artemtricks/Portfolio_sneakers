@@ -8,6 +8,10 @@ import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
 
+import { useDispatch, useSelector } from "react-redux";
+import { updateFavoriteSneaker } from "../../redux/sneaker/sneakerSlice";
+import { selectFavoriteData } from "../../redux/sneaker/selector";
+
 type CardProps = {
   id: number;
   imageUrl: string;
@@ -44,13 +48,30 @@ const Card: React.FC<CardProps> = ({
     });
   };
 
+  const dispatch = useDispatch();
+  const sneakers = useSelector(selectFavoriteData);
+
+  const handleToggleFavorite = useCallback(
+    (id: number) => {
+      const sneakerItem = sneakers.find((sneaker) => sneaker.id === id);
+      if (sneakerItem) {
+        //@ts-ignore
+        dispatch(updateFavoriteSneaker(sneakerItem));
+      }
+    },
+    [dispatch, sneakers]
+  );
+
   return (
     <div className={styles.card}>
       {loading ? (
         <Skeleton />
       ) : (
         <>
-          <div className={styles.favorite} onClick={onClickFavorite}>
+          <div
+            className={styles.favorite}
+            onClick={() => handleToggleFavorite(id)}
+          >
             <img
               src={isFavorite ? heartLikeImg : heartUnLikeImg}
               alt="Unlicked"
