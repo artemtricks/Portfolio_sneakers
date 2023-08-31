@@ -15,13 +15,13 @@ const SwiperSlider: React.FC = () => {
         className={styles.custom}
       >
         <SwiperSlide>
-          <img src={firstPic} alt="Sneakers" />
+          <img src={"firstPic"} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide>
-          <img src={secondPic} alt="Sneakers" />
+          <img src={"secondPic"} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>

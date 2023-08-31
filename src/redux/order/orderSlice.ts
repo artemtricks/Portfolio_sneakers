@@ -72,7 +72,7 @@ const orderSlice = createSlice({
       (state, actions: PayloadAction<Orders[]>) => {
         state.order = actions.payload;
         state.status = "success";
-        console.log(state.order);
+        console.log(state.status);
       }
     );
     builder.addCase(fetchOrders.rejected, (state) => {
@@ -84,7 +84,6 @@ const orderSlice = createSlice({
       addNewOrder.fulfilled,
       (state, actions: PayloadAction<any>) => {
         state.order[0] = actions.payload;
-        console.log(state.order[0], "stateOrder");
       }
     );
   },

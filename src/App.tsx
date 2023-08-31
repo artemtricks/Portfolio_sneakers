@@ -11,6 +11,8 @@ import AppContext from "./context";
 import { NotFound } from "./pages/NotFound";
 import { selectSneakerData } from "./redux/sneaker/selector";
 import { fetchSnekers } from "./redux/sneaker/sneakerSlice";
+import { selectCartData } from "./redux/cart/selector";
+import { fetchCart } from "./redux/cart/cartSlice";
 
 export interface ISneakers {
   id: number;
@@ -27,6 +29,7 @@ export interface ICartItems extends ISneakers {
 
 const App = () => {
   const { items: sneakers, status } = useSelector(selectSneakerData);
+  const { cart } = useSelector(selectCartData);
   const dispatch = useAppDispatch();
 
   const [cartItems, setCartItems] = React.useState<ICartItems[] | []>([]);
@@ -36,6 +39,12 @@ const App = () => {
   React.useEffect(() => {
     dispatch(fetchSnekers());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(fetchCart());
+  }, [dispatch]);
+
+  console.log(cart, "cart");
 
   React.useEffect(() => {
     async function fetchData() {
@@ -57,7 +66,7 @@ const App = () => {
 
   const onAddToCart = async (obj: ICartItems) => {
     try {
-      const findItem = cartItems.find(
+      const findItem = cart.find(
         (item) => Number(item.parentId) === Number(obj.id)
       );
       if (findItem) {
@@ -104,7 +113,7 @@ const App = () => {
   };
 
   const isItemAdded = (id: number) => {
-    return cartItems.some((obj) => Number(obj.parentId) === Number(id));
+    return cart.some((obj) => Number(obj.parentId) === Number(id));
   };
 
   return (
@@ -120,7 +129,7 @@ const App = () => {
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
-          items={sneakers}
+          items={cart}
           onRemove={onRemoveItem}
           opened={cartOpened}
         />
