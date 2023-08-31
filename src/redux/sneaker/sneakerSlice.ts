@@ -68,12 +68,12 @@ const sneakerSlice = createSlice({
     });
     builder.addCase(updateFavoriteSneaker.fulfilled, (state, action) => {
       const updatedSneaker = action.payload;
-      console.log(action.payload);
       const index = state.items.findIndex(
         (sneaker: ISneakers) => sneaker.id === updatedSneaker.id
       );
 
       state.items[index] = updatedSneaker;
+      console.log(state.status);
     });
   },
 });

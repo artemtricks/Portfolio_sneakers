@@ -8,7 +8,7 @@ import { fetchOrders } from "../redux/order/orderSlice";
 const Orders: React.FC = () => {
   const dispatch = useAppDispatch();
   const { order, status } = useSelector(selectOrderData);
-  console.log(order.map((item) => item.items).flat(), "order");
+
   const ordersArr = order.map((item) => item.items).flat();
 
   React.useEffect(() => {

@@ -32,20 +32,9 @@ const Card: React.FC<CardProps> = ({
   loading,
   isFavorite,
 }) => {
-  const { isItemAdded, onAddFavorite } = React.useContext(AppContext);
+  const { isItemAdded } = React.useContext(AppContext);
   const onClickPlus = () => {
     !!onPlus && onPlus({ id, parentId: id, title, price, imageUrl });
-  };
-
-  const onClickFavorite = () => {
-    onAddFavorite({
-      id,
-      parentId: id,
-      title,
-      price,
-      imageUrl,
-      isFavorite: isFavorite,
-    });
   };
 
   const dispatch = useDispatch();

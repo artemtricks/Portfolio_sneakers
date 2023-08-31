@@ -1,27 +1,52 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
 import { ISneakers } from "../../App";
 import axios from "axios";
-import sneakerSlice from "../sneaker/sneakerSlice";
 
-interface Orders {
+export interface Orders {
   items: ISneakers[];
   id?: number;
 }
 
-interface OrderSneakerState {
+export interface OrderSneakerState {
   order: Orders[];
   status: "loading" | "success" | "error" | "";
 }
 
-export const fetchOrders = createAsyncThunk<ISneakers[]>(
+export interface NewOrderParam {
+  id: number;
+  imageUrl: string;
+  price: number;
+  title: string;
+  isFavorite: boolean;
+  isAddToCart: boolean;
+  parentId: number;
+}
+
+export const fetchOrders = createAsyncThunk<Orders[]>(
   "order/fetchOrder",
   async () => {
     const response = await axios.get(
       "https://7c51c28aa165f47d.mokky.dev/orders"
     );
-    return response.data as ISneakers[];
+    return response.data as Orders[];
   }
 );
+
+export const addNewOrder = createAsyncThunk<
+  Orders[],
+  NewOrderParam,
+  { state: OrderSneakerState }
+>("order/addNewOrders", async (CartItems, { getState }) => {
+  const state = getState();
+  const response = await axios.post(
+    `https://7c51c28aa165f47d.mokky.dev/orders`,
+    { items: CartItems }
+  );
+  const createOrder = {
+    items: [...(state.order[0] as any), response.data],
+  };
+  return createOrder as any;
+});
 
 const initialState: OrderSneakerState = {
   order: [],
@@ -42,16 +67,26 @@ const orderSlice = createSlice({
       console.log(state.status);
       state.order = [];
     });
-    builder.addCase(fetchOrders.fulfilled, (state, actions: any) => {
-      state.order = actions.payload;
-      state.status = "success";
-      console.log(state.order);
-    });
+    builder.addCase(
+      fetchOrders.fulfilled,
+      (state, actions: PayloadAction<Orders[]>) => {
+        state.order = actions.payload;
+        state.status = "success";
+        console.log(state.order);
+      }
+    );
     builder.addCase(fetchOrders.rejected, (state) => {
       state.status = "error";
       console.log(state.status);
       state.order = [];
     });
+    builder.addCase(
+      addNewOrder.fulfilled,
+      (state, actions: PayloadAction<any>) => {
+        state.order[0] = actions.payload;
+        console.log(state.order[0], "stateOrder");
+      }
+    );
   },
 });
 

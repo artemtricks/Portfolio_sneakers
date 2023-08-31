@@ -6,6 +6,10 @@ import btnRemove from "../../assets/img/btnRemove.svg";
 import arrowSvg from "../../assets/img/arrow.svg";
 import { ISneakers } from "../../App";
 import styles from "./Drawer.module.scss";
+import { useDispatch, useSelector } from "react-redux";
+import { addNewOrder } from "../../redux/order/orderSlice";
+import { Orders, NewOrderParam } from "../../redux/order/orderSlice";
+import { selectOrderData } from "../../redux/order/selector";
 
 type DrawerProps = {
   onRemove: (id: number) => void;
@@ -27,29 +31,41 @@ const Drawer: React.FC<DrawerProps> = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { cartItems, setCartItems, totalPrice } = useCart();
 
-  const onClickOrder = async () => {
-    try {
-      setIsLoading(true);
-      const { data } = await axios.post(
-        "https://7c51c28aa165f47d.mokky.dev/orders",
-        { items: cartItems }
-      );
+  // const onClickOrder = async () => {
+  //   try {
+  //     setIsLoading(true);
+  //     const { data } = await axios.post(
+  //       "https://7c51c28aa165f47d.mokky.dev/orders",
+  //       { items: cartItems }
+  //     );
 
-      setOrderId(data.id);
-      setIsOrderComplite(true);
-      setCartItems([]);
-      for (let i = 0; i < cartItems.length; i++) {
-        const item: ISneakers = cartItems[i];
-        await axios.delete(
-          "https://7c51c28aa165f47d.mokky.dev/Cart/" + item.id
-        );
-        await delay(1000);
+  //     setOrderId(data.id);
+  //     setIsOrderComplite(true);
+  //     setCartItems([]);
+  //     for (let i = 0; i < cartItems.length; i++) {
+  //       const item: ISneakers = cartItems[i];
+  //       await axios.delete(
+  //         "https://7c51c28aa165f47d.mokky.dev/Cart/" + item.id
+  //       );
+  //       await delay(1000);
+  //     }
+  //   } catch {
+  //     alert("Ошибка при создании заказа");
+  //     setIsLoading(false);
+  //   }
+  // };
+  const order = useSelector(selectOrderData);
+  const dispatch = useDispatch();
+
+  const handleNewOrder = React.useCallback(
+    (cartItems: NewOrderParam) => {
+      if (cartItems) {
+        //@ts-ignore
+        dispatch(addNewOrder(cartItems));
       }
-    } catch {
-      alert("Ошибка при создании заказа");
-      setIsLoading(false);
-    }
-  };
+    },
+    [dispatch, order]
+  );
 
   return (
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
@@ -104,7 +120,7 @@ const Drawer: React.FC<DrawerProps> = ({
                 </li>
               </ul>
               <button
-                onClick={onClickOrder}
+                onClick={() => handleNewOrder(cartItems)}
                 disabled={isLoading}
                 className="greenButton"
               >

@@ -1,6 +1,6 @@
 import React from "react";
 import Card from "../components/Card";
-import Swip from "../components/Swiper";
+import SwiperSlider from "../components/Swiper";
 import btnRemoveSvg from "../assets/img/btnRemove.svg";
 import searchSvg from "../assets/img/search.svg";
 import { ICartItems, ISneakers } from "../App";
@@ -46,7 +46,7 @@ const Home: React.FC<HomeProps> = ({
 
   return (
     <>
-      <Swip />
+      <SwiperSlider />
       <div className="content p-40">
         <div className="d-flex align-center mb-40 justify-between">
           <h1>
@@ -69,7 +69,6 @@ const Home: React.FC<HomeProps> = ({
             />
           </div>
         </div>
-
         <div className="d-flex flex-wrap">{renderItems()}</div>
       </div>
     </>

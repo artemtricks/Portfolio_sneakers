@@ -6,7 +6,7 @@ import "swiper/css";
 import firstPic from "../../assets/1.jpg";
 import secondPic from "../../assets/2.jpg";
 
-export default function Swip() {
+const SwiperSlider: React.FC = () => {
   return (
     <>
       <Swiper
@@ -15,13 +15,13 @@ export default function Swip() {
         className={styles.custom}
       >
         <SwiperSlide>
-          <img src={""} alt="Sneakers" />
+          <img src={firstPic} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide>
-          <img src={""} alt="Sneakers" />
+          <img src={secondPic} alt="Sneakers" />
         </SwiperSlide>
         <SwiperSlide></SwiperSlide>
         <SwiperSlide></SwiperSlide>
@@ -30,4 +30,6 @@ export default function Swip() {
       </Swiper>
     </>
   );
-}
+};
+
+export default SwiperSlider;

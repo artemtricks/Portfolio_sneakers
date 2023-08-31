@@ -28,12 +28,10 @@ export interface ICartItems extends ISneakers {
 const App = () => {
   const { items: sneakers, status } = useSelector(selectSneakerData);
   const dispatch = useAppDispatch();
-  // const [items, setItems] = React.useState<ISneakers[] | []>([]);
+
   const [cartItems, setCartItems] = React.useState<ICartItems[] | []>([]);
   const [serchValue, setSearchValue] = React.useState<string>("");
   const [cartOpened, setCartOpened] = React.useState<boolean>(false);
-  const [isLoading, setIsLoading] = React.useState<boolean>(true);
-  const [favorited, setFavorited] = React.useState<ISneakers[] | []>([]);
 
   React.useEffect(() => {
     dispatch(fetchSnekers());
@@ -47,7 +45,6 @@ const App = () => {
           // axios.get("https://7c51c28aa165f47d.mokky.dev/items"),
         ]);
 
-        setIsLoading(false);
         setCartItems(cartResponse.data);
         // setItems(itemsResponse.data);
       } catch (error) {
@@ -56,7 +53,7 @@ const App = () => {
     }
 
     fetchData();
-  }, [favorited]);
+  }, []);
 
   const onAddToCart = async (obj: ICartItems) => {
     try {
@@ -93,29 +90,6 @@ const App = () => {
     }
   };
 
-  // const onAddFavorite = (obj: ISneakers) => {
-  //   if (items.find((item) => item.id === obj.id && obj.isFavorite === false)) {
-  //     axios
-  //       .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-  //         isFavorite: true,
-  //       })
-  //       .then((response) => {
-  //         setFavorited(response.data);
-  //       })
-  //       .catch((err) => {
-  //         console.log(`не удалось добавить в избранное`, err);
-  //       });
-  //   } else {
-  //     axios
-  //       .patch(`https://7c51c28aa165f47d.mokky.dev/items/${obj.id}`, {
-  //         isFavorite: false,
-  //       })
-  //       .then((response) => {
-  //         setFavorited(response.data);
-  //       });
-  //   }
-  // };
-
   const onRemoveItem = (id: number) => {
     try {
       axios.delete(`https://7c51c28aa165f47d.mokky.dev/Cart/${id}`);
@@ -141,8 +115,6 @@ const App = () => {
         setCartItems,
         onAddToCart,
         setCartOpened,
-
-        favorited,
       }}
     >
       <div className="wrapper clear">
@@ -163,7 +135,7 @@ const App = () => {
                 setSearchValue={setSearchValue}
                 onChangeSearchInput={onChangeSearchInput}
                 onAddToCart={onAddToCart}
-                isLoading={isLoading}
+                isLoading={status === "loading"}
               />
             }
           />
