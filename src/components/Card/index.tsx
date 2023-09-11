@@ -9,8 +9,13 @@ import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
 
 import { useDispatch, useSelector } from "react-redux";
-import { updateFavoriteSneaker } from "../../redux/sneaker/sneakerSlice";
+import {
+  addNewFavoriteSneaker,
+  addNewCartItem,
+} from "../../redux/sneaker/sneakerSlice";
+
 import { selectFavoriteData } from "../../redux/sneaker/selector";
+import { selectCartData } from "../../redux/cart/selector";
 
 type CardProps = {
   id: number;
@@ -19,6 +24,7 @@ type CardProps = {
   price: number;
   loading?: boolean;
   isFavorite?: boolean;
+  isAddToCart?: boolean;
 
   onPlus?: (obj: any) => Promise<void>;
 };
@@ -31,6 +37,7 @@ const Card: React.FC<CardProps> = ({
   onPlus,
   loading,
   isFavorite,
+  isAddToCart,
 }) => {
   const { isItemAdded } = React.useContext(AppContext);
   const onClickPlus = () => {
@@ -39,16 +46,31 @@ const Card: React.FC<CardProps> = ({
 
   const dispatch = useDispatch();
   const sneakers = useSelector(selectFavoriteData);
+  const { cart } = useSelector(selectCartData);
+  // const isItemAdded = (id: number) => {
+  //   return cart.some((obj) => Number(obj.parentId) === Number(id));
+  // };
 
   const handleToggleFavorite = useCallback(
     (id: number) => {
       const sneakerItem = sneakers.find((sneaker) => sneaker.id === id);
       if (sneakerItem) {
         //@ts-ignore
-        dispatch(updateFavoriteSneaker(sneakerItem));
+        dispatch(addNewFavoriteSneaker(sneakerItem));
       }
     },
     [dispatch, sneakers]
+  );
+
+  const handleAddNewCart = useCallback(
+    (id: number) => {
+      const cartItem = sneakers.find((sneaker) => sneaker.id === id);
+      if (cartItem) {
+        //@ts-ignore
+        dispatch(addNewCartItem(cartItem));
+      }
+    },
+    [sneakers, dispatch]
   );
 
   return (
@@ -76,8 +98,8 @@ const Card: React.FC<CardProps> = ({
             {!!onPlus && (
               <img
                 className={styles.plus}
-                onClick={onClickPlus}
-                src={isItemAdded(id) ? btnDoneImg : btnPlusImg}
+                onClick={() => handleAddNewCart(id)}
+                src={isAddToCart ? btnDoneImg : btnPlusImg}
                 alt="Plus"
               />
             )}

@@ -26,7 +26,7 @@ export const fetchOrders = createAsyncThunk<Orders[]>(
   "order/fetchOrder",
   async () => {
     const response = await axios.get(
-      "https://7c51c28aa165f47d.mokky.dev/orders"
+      "https://1047012a1579016a.mokky.dev/order"
     );
     return response.data as Orders[];
   }
@@ -39,7 +39,7 @@ export const addNewOrder = createAsyncThunk<
 >("order/addNewOrders", async (CartItems, { getState }) => {
   const state = getState();
   const response = await axios.post(
-    `https://7c51c28aa165f47d.mokky.dev/orders`,
+    `https://1047012a1579016a.mokky.dev/order`,
     { items: CartItems }
   );
   const createOrder = {

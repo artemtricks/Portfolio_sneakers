@@ -1,5 +1,5 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ICartItems } from "../../App";
+import { ICartItems, ISneakers } from "../../App";
 import axios from "axios";
 
 export interface CartSneakerState {
@@ -11,12 +11,25 @@ export const fetchCart = createAsyncThunk<ICartItems[]>(
   "cart/fetchCart",
   async () => {
     const response = await axios.get<ICartItems[]>(
-      "https://7c51c28aa165f47d.mokky.dev/Cart"
+      "https://1047012a1579016a.mokky.dev/cart"
     );
 
     return response.data as ICartItems[];
   }
 );
+
+// export const addNewCartItem = createAsyncThunk<ICartItems, ICartItems>(
+//   "cart/addNewCartItem",
+//   async (params) => {
+//     const { id, isAddToCart } = params;
+//     const response = await axios.patch<ICartItems>(
+//       `https://1047012a1579016a.mokky.dev/items/${id}`,
+//       { isAddToCart: !isAddToCart }
+//     );
+
+//     return response.data as ICartItems;
+//   }
+// );
 
 const initialState: CartSneakerState = {
   cart: [],
@@ -50,6 +63,15 @@ const cartSlice = createSlice({
       state.cart = [];
       console.log(state.status);
     });
+    // builder.addCase(addNewCartItem.fulfilled, (state, action) => {
+    //   const updatedSneaker = action.payload;
+
+    //   const index = state.cart.findIndex(
+    //     (cart: ICartItems) => cart.id === updatedSneaker.id
+    //   );
+    //   state.cart[index] = updatedSneaker;
+    //   console.log(state.status);
+    // });
   },
 });
 

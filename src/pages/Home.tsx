@@ -10,7 +10,6 @@ type HomeProps = {
   serchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
   onChangeSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
   onAddToCart: (obj: ICartItems) => Promise<void>;
   isLoading: boolean;
 };
@@ -39,6 +38,7 @@ const Home: React.FC<HomeProps> = ({
           loading={isLoading}
           onPlus={(obj) => onAddToCart(obj)}
           isFavorite={item.isFavorite}
+          isAddToCart={item.isAddToCart}
         />
       )
     );

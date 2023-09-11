@@ -44,13 +44,11 @@ const App = () => {
     dispatch(fetchCart());
   }, [dispatch]);
 
-  console.log(cart, "cart");
-
   React.useEffect(() => {
     async function fetchData() {
       try {
         const [cartResponse] = await Promise.all([
-          axios.get("https://7c51c28aa165f47d.mokky.dev/Cart"),
+          axios.get("https://1047012a1579016a.mokky.dev/cart"),
           // axios.get("https://7c51c28aa165f47d.mokky.dev/items"),
         ]);
 
@@ -74,12 +72,12 @@ const App = () => {
           prev.filter((item) => Number(item.parentId) !== Number(obj.id))
         );
         await axios.delete(
-          `https://7c51c28aa165f47d.mokky.dev/Cart/${findItem.id}`
+          `https://1047012a1579016a.mokky.dev/cart/${findItem.id}`
         );
       } else {
         setCartItems((prev) => [...prev, obj]);
         const { data } = await axios.post(
-          "https://7c51c28aa165f47d.mokky.dev/Cart",
+          "https://1047012a1579016a.mokky.dev/cart",
           obj
         );
         setCartItems((prev) =>
@@ -101,7 +99,7 @@ const App = () => {
 
   const onRemoveItem = (id: number) => {
     try {
-      axios.delete(`https://7c51c28aa165f47d.mokky.dev/Cart/${id}`);
+      axios.delete(`https://1047012a1579016a.mokky.dev/cart/${id}`);
       setCartItems((prev) => prev.filter((item) => item.id !== id)); // number
     } catch (error) {
       alert("Не удалсось удалить кроссовки из корзины");

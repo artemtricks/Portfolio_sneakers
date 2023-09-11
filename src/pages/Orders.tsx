@@ -20,6 +20,7 @@ const Orders: React.FC = () => {
       <div className="d-flex align-center mb-40 justify-between">
         <h1>Мои заказы</h1>
       </div>
+
       <div className="d-flex flex-wrap">
         {(status === "loading" ? [...Array(10).fill({})] : ordersArr).map(
           (item, index) => (
