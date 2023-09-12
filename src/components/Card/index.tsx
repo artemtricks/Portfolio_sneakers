@@ -7,15 +7,14 @@ import imageImg from "../../assets/sneakers/10.jpg";
 import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
-
 import { useDispatch, useSelector } from "react-redux";
 import {
   addNewFavoriteSneaker,
   addNewCartItem,
 } from "../../redux/sneaker/sneakerSlice";
-
 import { selectFavoriteData } from "../../redux/sneaker/selector";
-import { selectCartData } from "../../redux/cart/selector";
+import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
+import { ISneakers } from "../../App";
 
 type CardProps = {
   id: number;
@@ -39,39 +38,9 @@ const Card: React.FC<CardProps> = ({
   isFavorite,
   isAddToCart,
 }) => {
-  const { isItemAdded } = React.useContext(AppContext);
-  const onClickPlus = () => {
-    !!onPlus && onPlus({ id, parentId: id, title, price, imageUrl });
-  };
-
-  const dispatch = useDispatch();
   const sneakers = useSelector(selectFavoriteData);
-  const { cart } = useSelector(selectCartData);
-  // const isItemAdded = (id: number) => {
-  //   return cart.some((obj) => Number(obj.parentId) === Number(id));
-  // };
-
-  const handleToggleFavorite = useCallback(
-    (id: number) => {
-      const sneakerItem = sneakers.find((sneaker) => sneaker.id === id);
-      if (sneakerItem) {
-        //@ts-ignore
-        dispatch(addNewFavoriteSneaker(sneakerItem));
-      }
-    },
-    [dispatch, sneakers]
-  );
-
-  const handleAddNewCart = useCallback(
-    (id: number) => {
-      const cartItem = sneakers.find((sneaker) => sneaker.id === id);
-      if (cartItem) {
-        //@ts-ignore
-        dispatch(addNewCartItem(cartItem));
-      }
-    },
-    [sneakers, dispatch]
-  );
+  const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
+  const handleToggleFavorite = useToggleSneakerOpt(sneakers);
 
   return (
     <div className={styles.card}>

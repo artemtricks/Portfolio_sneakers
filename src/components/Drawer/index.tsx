@@ -1,6 +1,6 @@
 import React from "react";
 import Info from "../Info";
-import axios from "axios";
+
 import { useCart } from "../../hooks/useCart";
 import btnRemove from "../../assets/img/btnRemove.svg";
 import arrowSvg from "../../assets/img/arrow.svg";
@@ -8,8 +8,10 @@ import { ISneakers } from "../../App";
 import styles from "./Drawer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewOrder } from "../../redux/order/orderSlice";
-import { Orders, NewOrderParam } from "../../redux/order/orderSlice";
+import { NewOrderParam } from "../../redux/order/orderSlice";
 import { selectOrderData } from "../../redux/order/selector";
+import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
+import { selectSneakerData } from "../../redux/sneaker/selector";
 
 type DrawerProps = {
   onRemove: (id: number) => void;
@@ -31,31 +33,10 @@ const Drawer: React.FC<DrawerProps> = ({
   const [isLoading, setIsLoading] = React.useState<boolean>(false);
   const { cartItems, setCartItems, totalPrice } = useCart();
 
-  // const onClickOrder = async () => {
-  //   try {
-  //     setIsLoading(true);
-  //     const { data } = await axios.post(
-  //       "https://7c51c28aa165f47d.mokky.dev/orders",
-  //       { items: cartItems }
-  //     );
-
-  //     setOrderId(data.id);
-  //     setIsOrderComplite(true);
-  //     setCartItems([]);
-  //     for (let i = 0; i < cartItems.length; i++) {
-  //       const item: ISneakers = cartItems[i];
-  //       await axios.delete(
-  //         "https://7c51c28aa165f47d.mokky.dev/Cart/" + item.id
-  //       );
-  //       await delay(1000);
-  //     }
-  //   } catch {
-  //     alert("Ошибка при создании заказа");
-  //     setIsLoading(false);
-  //   }
-  // };
   const order = useSelector(selectOrderData);
   const dispatch = useDispatch();
+  const { items: sneakers } = useSelector(selectSneakerData);
+  const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
 
   const handleNewOrder = React.useCallback(
     (cartItems: NewOrderParam) => {
@@ -98,7 +79,7 @@ const Drawer: React.FC<DrawerProps> = ({
                     <b>{obj.price} руб.</b>
                   </div>
                   <img
-                    onClick={() => onRemove(obj.id)}
+                    onClick={() => handleAddNewCart(obj.id)}
                     className="removeBtn"
                     src={btnRemove}
                     alt="Remove"
@@ -120,7 +101,7 @@ const Drawer: React.FC<DrawerProps> = ({
                 </li>
               </ul>
               <button
-                onClick={() => handleNewOrder(cartItems)}
+                onClick={() => handleNewOrder(items as any)}
                 disabled={isLoading}
                 className="greenButton"
               >

@@ -35,7 +35,13 @@ const App = () => {
   const [cartItems, setCartItems] = React.useState<ICartItems[] | []>([]);
   const [serchValue, setSearchValue] = React.useState<string>("");
   const [cartOpened, setCartOpened] = React.useState<boolean>(false);
+  const cartSneaker = sneakers.filter((item) => {
+    if (item.isAddToCart === true) {
+      return item;
+    }
+  });
 
+  console.log(cartSneaker);
   React.useEffect(() => {
     dispatch(fetchSnekers());
   }, [dispatch]);
@@ -127,7 +133,7 @@ const App = () => {
       <div className="wrapper clear">
         <Drawer
           onClose={() => setCartOpened(false)}
-          items={cart}
+          items={cartSneaker}
           onRemove={onRemoveItem}
           opened={cartOpened}
         />

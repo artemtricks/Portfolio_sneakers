@@ -63,15 +63,6 @@ const cartSlice = createSlice({
       state.cart = [];
       console.log(state.status);
     });
-    // builder.addCase(addNewCartItem.fulfilled, (state, action) => {
-    //   const updatedSneaker = action.payload;
-
-    //   const index = state.cart.findIndex(
-    //     (cart: ICartItems) => cart.id === updatedSneaker.id
-    //   );
-    //   state.cart[index] = updatedSneaker;
-    //   console.log(state.status);
-    // });
   },
 });
 
