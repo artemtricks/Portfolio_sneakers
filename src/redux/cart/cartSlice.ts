@@ -18,18 +18,18 @@ export const fetchCart = createAsyncThunk<ICartItems[]>(
   }
 );
 
-// export const addNewCartItem = createAsyncThunk<ICartItems, ICartItems>(
-//   "cart/addNewCartItem",
-//   async (params) => {
-//     const { id, isAddToCart } = params;
-//     const response = await axios.patch<ICartItems>(
-//       `https://1047012a1579016a.mokky.dev/items/${id}`,
-//       { isAddToCart: !isAddToCart }
-//     );
+export const addNewCartItem = createAsyncThunk<ICartItems, ICartItems>(
+  "cart/addNewCartItem",
+  async (items) => {
+    const { isAddToCart, id } = items;
+    const response = await axios.post<ICartItems>(
+      `https://1047012a1579016a.mokky.dev/cart`,
+      { ...items, isAddToCart: !isAddToCart, parentId: id }
+    );
 
-//     return response.data as ICartItems;
-//   }
-// );
+    return response.data as ICartItems;
+  }
+);
 
 const initialState: CartSneakerState = {
   cart: [],
@@ -62,6 +62,14 @@ const cartSlice = createSlice({
       state.status = "error";
       state.cart = [];
       console.log(state.status);
+    });
+    builder.addCase(addNewCartItem.fulfilled, (state, actions) => {
+      const updateCartItem = actions.payload;
+      // const index = state.cart.findIndex(
+      //   (cartItem) => cartItem.id === updateCartItem.id
+      // );
+      state.cart.push(updateCartItem);
+      state.status = "success";
     });
   },
 });

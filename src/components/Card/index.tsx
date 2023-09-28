@@ -1,20 +1,15 @@
-import React, { useCallback } from "react";
+import React from "react";
 import styles from "./Card.module.scss";
-import AppContext from "../../context";
 import btnPlusImg from "../../assets/img/btn-plus.svg";
 import btnDoneImg from "../../assets/img/btn-checked.svg";
-import imageImg from "../../assets/sneakers/10.jpg";
 import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
 import { useDispatch, useSelector } from "react-redux";
-import {
-  addNewFavoriteSneaker,
-  addNewCartItem,
-} from "../../redux/sneaker/sneakerSlice";
 import { selectFavoriteData } from "../../redux/sneaker/selector";
 import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
-import { ISneakers } from "../../App";
+import { addNewCartItem } from "../../redux/cart/cartSlice";
+import { selectCartAdd } from "../../redux/cart/selector";
 
 type CardProps = {
   id: number;
@@ -24,8 +19,7 @@ type CardProps = {
   loading?: boolean;
   isFavorite?: boolean;
   isAddToCart?: boolean;
-
-  onPlus?: (obj: any) => Promise<void>;
+  onPlus?: boolean;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -39,8 +33,28 @@ const Card: React.FC<CardProps> = ({
   isAddToCart,
 }) => {
   const sneakers = useSelector(selectFavoriteData);
-  const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
+  // const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
   const handleToggleFavorite = useToggleSneakerOpt(sneakers);
+  const dispatch = useDispatch();
+
+  const handleCart = React.useCallback(
+    (id: number) => {
+      const sneakerItem = sneakers.find((item) => item.id === id);
+      if (sneakerItem) {
+        //@ts-ignore
+        dispatch(addNewCartItem(sneakerItem));
+      }
+    },
+    [sneakers, dispatch]
+  );
+
+  const cart = useSelector(selectCartAdd);
+  const add = cart.find((item) => {
+    if (item.parentId === id) {
+      return item.isAddToCart;
+    }
+  });
+  console.log(cart, "add");
 
   return (
     <div className={styles.card}>
@@ -64,11 +78,11 @@ const Card: React.FC<CardProps> = ({
               <span>Цена:</span>
               <b>{price} руб.</b>
             </div>
-            {!!onPlus && (
+            {onPlus && (
               <img
                 className={styles.plus}
-                onClick={() => handleAddNewCart(id)}
-                src={isAddToCart ? btnDoneImg : btnPlusImg}
+                onClick={() => handleCart(id)}
+                src={add ? btnDoneImg : btnPlusImg}
                 alt="Plus"
               />
             )}

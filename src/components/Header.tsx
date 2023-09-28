@@ -4,13 +4,20 @@ import { useCart } from "../hooks/useCart";
 import logoSvg from "../assets/img/logo1.png";
 import cartSvg from "../assets/img/cart.svg";
 import userSvg from "../assets/img/user.svg";
+import { useSelector } from "react-redux";
+import { selectSneakerData } from "../redux/sneaker/selector";
 
 type HeaderProps = {
   setCartOpened: React.Dispatch<React.SetStateAction<boolean>>;
 };
 
 const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
-  const { totalPrice } = useCart();
+  const { items } = useSelector(selectSneakerData);
+  const totalPrice = items
+    .filter((item) => item.isAddToCart === true)
+    .reduce((acc, curr) => {
+      return acc + curr.price;
+    }, 0);
 
   return (
     <header className="d-flex justify-between align-center p-40">

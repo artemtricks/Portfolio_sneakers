@@ -14,26 +14,17 @@ import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
 import { selectSneakerData } from "../../redux/sneaker/selector";
 
 type DrawerProps = {
-  onRemove: (id: number) => void;
   onClose: (value: React.SetStateAction<boolean>) => void;
   opened: boolean;
   items: ISneakers[];
 };
 
-const delay = (ms: any) => new Promise((resolve) => setTimeout(resolve, ms));
-
-const Drawer: React.FC<DrawerProps> = ({
-  onRemove,
-  onClose,
-  opened,
-  items,
-}) => {
-  const [isOrderComplite, setIsOrderComplite] = React.useState(false);
+const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
   const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
-  const [isLoading, setIsLoading] = React.useState<boolean>(false);
-  const { cartItems, setCartItems, totalPrice } = useCart();
 
-  const order = useSelector(selectOrderData);
+  const { totalPrice } = useCart();
+
+  const { order, isAddNewOrder } = useSelector(selectOrderData);
   const dispatch = useDispatch();
   const { items: sneakers } = useSelector(selectSneakerData);
   const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
@@ -48,6 +39,7 @@ const Drawer: React.FC<DrawerProps> = ({
     [dispatch, order]
   );
 
+  console.log(isAddNewOrder);
   return (
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
       <div className={styles.drawer}>
@@ -102,7 +94,6 @@ const Drawer: React.FC<DrawerProps> = ({
               </ul>
               <button
                 onClick={() => handleNewOrder(items as any)}
-                disabled={isLoading}
                 className="greenButton"
               >
                 Оформить заказ <img src={arrowSvg} alt="Arrow" />
@@ -110,7 +101,11 @@ const Drawer: React.FC<DrawerProps> = ({
             </div>
           </div>
         ) : (
-          <Info isOrderComplite={isOrderComplite} orderId={orderId} />
+          <Info
+            isAddNewOrder={isAddNewOrder}
+            orderId={orderId}
+            onClose={() => onClose(false)}
+          />
         )}
       </div>
     </div>

@@ -1,15 +1,11 @@
-import React from "react";
-import AppContext from "../context";
-import { ICartItems } from "../App";
-interface F {
-  setCartItems: React.Dispatch<React.SetStateAction<[] | ICartItems[]>>;
-  cartItems: [] | ICartItems[];
-}
+import { useSelector } from "react-redux";
+import { selectSneakerData } from "../redux/sneaker/selector";
+
 export const useCart = () => {
-  const { cartItems, setCartItems } = React.useContext<any>(AppContext);
-  const totalPrice: number = cartItems.reduce(
-    (sum: number, obj: ICartItems) => obj.price + sum,
-    0
-  );
-  return { cartItems, setCartItems, totalPrice };
+  const { items } = useSelector(selectSneakerData);
+  const cartItems = items.filter((item) => item.isAddToCart === true);
+  const totalPrice = cartItems.reduce((acc, curr) => {
+    return acc + curr.price;
+  }, 0);
+  return { cartItems, totalPrice };
 };

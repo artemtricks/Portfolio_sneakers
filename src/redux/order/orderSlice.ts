@@ -10,6 +10,7 @@ export interface Orders {
 export interface OrderSneakerState {
   order: Orders[];
   status: "loading" | "success" | "error" | "";
+  isAddNewOrder: boolean;
 }
 
 export interface NewOrderParam {
@@ -51,6 +52,7 @@ export const addNewOrder = createAsyncThunk<
 const initialState: OrderSneakerState = {
   order: [],
   status: "",
+  isAddNewOrder: false,
 };
 
 const orderSlice = createSlice({
@@ -80,12 +82,19 @@ const orderSlice = createSlice({
       console.log(state.status);
       state.order = [];
     });
+    builder.addCase(addNewOrder.pending, (state) => {
+      state.isAddNewOrder = true;
+    });
     builder.addCase(
       addNewOrder.fulfilled,
       (state, actions: PayloadAction<any>) => {
         state.order[0] = actions.payload;
+        state.isAddNewOrder = false;
       }
     );
+    builder.addCase(addNewOrder.rejected, (state) => {
+      state.isAddNewOrder = false;
+    });
   },
 });
 

@@ -4,13 +4,15 @@ import SwiperSlider from "../components/Swiper";
 import btnRemoveSvg from "../assets/img/btnRemove.svg";
 import searchSvg from "../assets/img/search.svg";
 import { ICartItems, ISneakers } from "../App";
+import { useSelector } from "react-redux";
+import { selectCartAdd } from "../redux/cart/selector";
 
 type HomeProps = {
   items: ISneakers[] | [];
   serchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
   onChangeSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-  onAddToCart: (obj: ICartItems) => Promise<void>;
+
   isLoading: boolean;
 };
 
@@ -19,7 +21,7 @@ const Home: React.FC<HomeProps> = ({
   serchValue,
   setSearchValue,
   onChangeSearchInput,
-  onAddToCart,
+
   isLoading,
 }) => {
   const renderItems = () => {
@@ -36,7 +38,7 @@ const Home: React.FC<HomeProps> = ({
           price={item.price}
           imageUrl={item.imageUrl}
           loading={isLoading}
-          onPlus={(obj) => onAddToCart(obj)}
+          onPlus={true}
           isFavorite={item.isFavorite}
           isAddToCart={item.isAddToCart}
         />
