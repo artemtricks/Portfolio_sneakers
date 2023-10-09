@@ -39,17 +39,17 @@ export const addNewFavoriteSneaker = createAsyncThunk<
   return response.data as ISneakers;
 });
 
-export const addNewCartItem = createAsyncThunk<ISneakers, CartSneakerParam>(
-  "sneakers/addNewCartItem",
-  async (params) => {
-    const { id, isAddToCart } = params;
-    const response = await axios.patch<ISneakers>(
-      `https://1047012a1579016a.mokky.dev/items/${id}`,
-      { isAddToCart: !isAddToCart }
-    );
-    return response.data as ISneakers;
-  }
-);
+// export const addNewCartItem = createAsyncThunk<ISneakers, CartSneakerParam>(
+//   "sneakers/addNewCartItem",
+//   async (params) => {
+//     const { id, isAddToCart } = params;
+//     const response = await axios.patch<ISneakers>(
+//       `https://1047012a1579016a.mokky.dev/items/${id}`,
+//       { isAddToCart: !isAddToCart }
+//     );
+//     return response.data as ISneakers;
+//   }
+// );
 
 const initialState: SneakersSliceState = {
   items: [],
@@ -92,15 +92,15 @@ const sneakerSlice = createSlice({
       state.items[index] = updatedSneaker;
       console.log(state.status);
     });
-    builder.addCase(addNewCartItem.fulfilled, (state, action) => {
-      const updatedSneaker = action.payload;
-      const index = state.items.findIndex(
-        (sneaker: ISneakers) => sneaker.id === updatedSneaker.id
-      );
+    // builder.addCase(addNewCartItem.fulfilled, (state, action) => {
+    //   const updatedSneaker = action.payload;
+    //   const index = state.items.findIndex(
+    //     (sneaker: ISneakers) => sneaker.id === updatedSneaker.id
+    //   );
 
-      state.items[index] = updatedSneaker;
-      console.log(state.status);
-    });
+    //   state.items[index] = updatedSneaker;
+    //   console.log(state.status);
+    // });
   },
 });
 

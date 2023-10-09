@@ -1,10 +1,7 @@
 import React from "react";
 import { UseSelector } from "react-redux/es/hooks/useSelector";
 import { useDispatch } from "react-redux";
-import {
-  addNewCartItem,
-  addNewFavoriteSneaker,
-} from "../redux/sneaker/sneakerSlice";
+import { addNewFavoriteSneaker } from "../redux/sneaker/sneakerSlice";
 
 import { ISneakers } from "../App";
 
@@ -16,9 +13,6 @@ export const useToggleSneakerOpt = (sneakers: ISneakers[], isCart = false) => {
       if (sneakerItem && isCart === false) {
         //@ts-ignore
         dispatch(addNewFavoriteSneaker(sneakerItem));
-      } else {
-        //@ts-ignore
-        dispatch(addNewCartItem(sneakerItem));
       }
     },
     [sneakers, dispatch]

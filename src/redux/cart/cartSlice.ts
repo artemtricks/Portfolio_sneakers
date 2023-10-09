@@ -1,6 +1,7 @@
 import { createSlice, createAsyncThunk, PayloadAction } from "@reduxjs/toolkit";
-import { ICartItems, ISneakers } from "../../App";
+import { ICartItems } from "../../App";
 import axios from "axios";
+import { RootState } from "../store";
 
 export interface CartSneakerState {
   cart: ICartItems[];
@@ -31,6 +32,20 @@ export const addNewCartItem = createAsyncThunk<ICartItems, ICartItems>(
   }
 );
 
+export const deleteCartItem = createAsyncThunk<ICartItems[], ICartItems>(
+  "cart/deleteCartItem",
+  async (items, { getState }) => {
+    await axios.delete<ICartItems>(
+      `https://1047012a1579016a.mokky.dev/cart/${items.id}`
+    );
+    const state = getState() as RootState;
+    const updatedCart = state.cart.cart.filter(
+      (cartItem) => cartItem.id !== items.id
+    );
+    return updatedCart;
+  }
+);
+
 const initialState: CartSneakerState = {
   cart: [],
   status: "",
@@ -42,6 +57,11 @@ const cartSlice = createSlice({
   reducers: {
     setCarts(state, actions) {
       state.cart = actions.payload;
+    },
+    deleteCart(state, action) {
+      state.cart = state.cart.filter(
+        (cartItem) => cartItem.id !== action.payload.id
+      );
     },
   },
   extraReducers: (builder) => {
@@ -64,13 +84,16 @@ const cartSlice = createSlice({
       console.log(state.status);
     });
     builder.addCase(addNewCartItem.fulfilled, (state, actions) => {
-      const updateCartItem = actions.payload;
-      // const index = state.cart.findIndex(
-      //   (cartItem) => cartItem.id === updateCartItem.id
-      // );
-      state.cart.push(updateCartItem);
+      state.cart.push(actions.payload);
       state.status = "success";
     });
+    builder.addCase(
+      deleteCartItem.fulfilled,
+      (state, action: PayloadAction<ICartItems[]>) => {
+        state.cart = action.payload;
+        console.log(state.status);
+      }
+    );
   },
 });
 

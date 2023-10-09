@@ -8,7 +8,7 @@ import Skeleton from "./Skeleton";
 import { useDispatch, useSelector } from "react-redux";
 import { selectFavoriteData } from "../../redux/sneaker/selector";
 import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
-import { addNewCartItem } from "../../redux/cart/cartSlice";
+import { addNewCartItem, deleteCartItem } from "../../redux/cart/cartSlice";
 import { selectCartAdd } from "../../redux/cart/selector";
 
 type CardProps = {
@@ -36,6 +36,7 @@ const Card: React.FC<CardProps> = ({
   // const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
   const handleToggleFavorite = useToggleSneakerOpt(sneakers);
   const dispatch = useDispatch();
+  const cart = useSelector(selectCartAdd);
 
   const handleCart = React.useCallback(
     (id: number) => {
@@ -48,7 +49,17 @@ const Card: React.FC<CardProps> = ({
     [sneakers, dispatch]
   );
 
-  const cart = useSelector(selectCartAdd);
+  const deleteCart = React.useCallback(
+    (id: number) => {
+      const sneakerItem = cart.find((item) => item.parentId === id);
+      if (sneakerItem) {
+        //@ts-ignore
+        dispatch(deleteCartItem(sneakerItem));
+      }
+    },
+    [cart, dispatch]
+  );
+
   const add = cart.find((item) => {
     if (item.parentId === id) {
       return item.isAddToCart;
@@ -79,12 +90,15 @@ const Card: React.FC<CardProps> = ({
               <b>{price} руб.</b>
             </div>
             {onPlus && (
-              <img
-                className={styles.plus}
-                onClick={() => handleCart(id)}
-                src={add ? btnDoneImg : btnPlusImg}
-                alt="Plus"
-              />
+              <>
+                <img
+                  className={styles.plus}
+                  onClick={() => handleCart(id)}
+                  src={btnPlusImg}
+                  alt="Plus"
+                />
+                <button onClick={() => deleteCart(id)}>delete</button>
+              </>
             )}
           </div>
         </>
