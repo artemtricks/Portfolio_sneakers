@@ -10,6 +10,7 @@ import { selectFavoriteData } from "../../redux/sneaker/selector";
 import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
 import { addNewCartItem, deleteCartItem } from "../../redux/cart/cartSlice";
 import { selectCartAdd } from "../../redux/cart/selector";
+import { useCart } from "../../hooks/useCart";
 
 type CardProps = {
   id: number;
@@ -33,39 +34,38 @@ const Card: React.FC<CardProps> = ({
   isAddToCart,
 }) => {
   const sneakers = useSelector(selectFavoriteData);
-  // const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
+
   const handleToggleFavorite = useToggleSneakerOpt(sneakers);
-  const dispatch = useDispatch();
-  const cart = useSelector(selectCartAdd);
+  const { cartItems, deleteCart, handleCart } = useCart();
+  // const cart = useSelector(selectCartAdd);
 
-  const handleCart = React.useCallback(
-    (id: number) => {
-      const sneakerItem = sneakers.find((item) => item.id === id);
-      if (sneakerItem) {
-        //@ts-ignore
-        dispatch(addNewCartItem(sneakerItem));
-      }
-    },
-    [sneakers, dispatch]
-  );
+  // const handleCart = React.useCallback(
+  //   (id: number) => {
+  //     const sneakerItem = sneakers.find((item) => item.id === id);
+  //     if (sneakerItem) {
+  //       //@ts-ignore
+  //       dispatch(addNewCartItem(sneakerItem));
+  //     }
+  //   },
+  //   [sneakers, dispatch]
+  // );
 
-  const deleteCart = React.useCallback(
-    (id: number) => {
-      const sneakerItem = cart.find((item) => item.parentId === id);
-      if (sneakerItem) {
-        //@ts-ignore
-        dispatch(deleteCartItem(sneakerItem));
-      }
-    },
-    [cart, dispatch]
-  );
+  // const deleteCart = React.useCallback(
+  //   (id: number) => {
+  //     const sneakerItem = cart.find((item) => item.parentId === id);
+  //     if (sneakerItem) {
+  //       //@ts-ignore
+  //       dispatch(deleteCartItem(sneakerItem));
+  //     }
+  //   },
+  //   [cart, dispatch]
+  // );
 
-  const add = cart.find((item) => {
-    if (item.parentId === id) {
-      return item.isAddToCart;
-    }
-  });
-  console.log(cart, "add");
+  // const add = cart.find((item) => {
+  //   if (item.parentId === id) {
+  //     return item.isAddToCart;
+  //   }
+  // });
 
   return (
     <div className={styles.card}>

@@ -1,11 +1,12 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { useCart } from "../hooks/useCart";
 import logoSvg from "../assets/img/logo1.png";
 import cartSvg from "../assets/img/cart.svg";
 import userSvg from "../assets/img/user.svg";
 import { useSelector } from "react-redux";
 import { selectSneakerData } from "../redux/sneaker/selector";
+import heartSvg from "../assets/img/favorite.svg";
+import { useCart } from "../hooks/useCart";
 
 type HeaderProps = {
   setCartOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -13,11 +14,10 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
   const { items } = useSelector(selectSneakerData);
-  const totalPrice = items
-    .filter((item) => item.isAddToCart === true)
-    .reduce((acc, curr) => {
-      return acc + curr.price;
-    }, 0);
+  const { totalPrice } = useCart();
+  const totalCountFavoriteItem = items.filter((item) => {
+    return item.isFavorite === true;
+  });
 
   return (
     <header className="d-flex justify-between align-center p-40">
@@ -31,12 +31,20 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
         </div>
       </Link>
       <ul className="d-flex">
+        <li className="mr-10 cu-p d-flex align-center">
+          <Link className="d-flex" to="/favorites">
+            <img width={18} height={18} src={heartSvg} alt="Пользователь" />
+            {totalCountFavoriteItem.length > 0 && (
+              <span>{totalCountFavoriteItem.length} шт.</span>
+            )}
+          </Link>
+        </li>
         <li
-          className="mr-30 cu-p d-flex align-center"
+          className="mr-10 cu-p d-flex align-center"
           onClick={() => setCartOpened(true)}
         >
           <img width={18} height={18} src={cartSvg} alt="Корзина" />
-          <span>{totalPrice} руб.</span>
+          {totalPrice > 0 && <span>{totalPrice} руб.</span>}
         </li>
 
         <li>

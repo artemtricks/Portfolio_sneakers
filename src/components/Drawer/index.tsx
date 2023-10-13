@@ -4,7 +4,7 @@ import Info from "../Info";
 import { useCart } from "../../hooks/useCart";
 import btnRemove from "../../assets/img/btnRemove.svg";
 import arrowSvg from "../../assets/img/arrow.svg";
-import { ISneakers } from "../../App";
+import { ISneakers, ICartItems } from "../../App";
 import styles from "./Drawer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewOrder } from "../../redux/order/orderSlice";
@@ -16,13 +16,13 @@ import { selectSneakerData } from "../../redux/sneaker/selector";
 type DrawerProps = {
   onClose: (value: React.SetStateAction<boolean>) => void;
   opened: boolean;
-  items: ISneakers[];
+  items: ICartItems[];
 };
 
 const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
   const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
 
-  const { totalPrice } = useCart();
+  const { totalPrice, deleteCart } = useCart();
 
   const { order, isAddNewOrder } = useSelector(selectOrderData);
   const dispatch = useDispatch();
@@ -56,7 +56,7 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
         {items.length > 0 ? (
           <div className="d-flex flex-column flex cartNotEpty">
             <div className={styles.items}>
-              {items.map((obj: ISneakers) => (
+              {items.map((obj: ICartItems) => (
                 <div
                   key={obj.id}
                   className="cartItem d-flex align-center mb-20"
@@ -71,7 +71,7 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
                     <b>{obj.price} руб.</b>
                   </div>
                   <img
-                    onClick={() => handleAddNewCart(obj.id)}
+                    onClick={() => deleteCart(obj.parentId)}
                     className="removeBtn"
                     src={btnRemove}
                     alt="Remove"

@@ -10,6 +10,8 @@ import { NotFound } from "./pages/NotFound";
 import { selectSneakerData } from "./redux/sneaker/selector";
 import { fetchSnekers } from "./redux/sneaker/sneakerSlice";
 import { fetchCart } from "./redux/cart/cartSlice";
+import Favorites from "./pages/Favorites";
+import { selectCartData } from "./redux/cart/selector";
 
 export interface ISneakers {
   id: number;
@@ -26,14 +28,10 @@ export interface ICartItems extends ISneakers {
 
 const App = () => {
   const { items: sneakers, status } = useSelector(selectSneakerData);
+  const { cart } = useSelector(selectCartData);
   const dispatch = useAppDispatch();
   const [serchValue, setSearchValue] = React.useState<string>("");
   const [cartOpened, setCartOpened] = React.useState<boolean>(false);
-  const cartSneaker = sneakers.filter((item) => {
-    if (item.isAddToCart === true) {
-      return item;
-    }
-  });
 
   React.useEffect(() => {
     dispatch(fetchSnekers());
@@ -51,8 +49,8 @@ const App = () => {
     <div className="wrapper clear">
       <Drawer
         onClose={() => setCartOpened(false)}
-        items={cartSneaker}
         opened={cartOpened}
+        items={cart}
       />
       <Header setCartOpened={setCartOpened} />
       <Routes>
@@ -69,6 +67,7 @@ const App = () => {
           }
         />
         <Route path="orders" element={<Orders />} />
+        <Route path="favorites" element={<Favorites />} />
         <Route path="*" element={<NotFound />} />
       </Routes>
     </div>
