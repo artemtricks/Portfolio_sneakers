@@ -31,6 +31,7 @@ const Orders: React.FC = () => {
               price={item.price}
               imageUrl={item.imageUrl}
               loading={status === "loading"}
+              isFavorite={item.isFavorite}
             />
           )
         )}

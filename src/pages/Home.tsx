@@ -3,9 +3,9 @@ import Card from "../components/Card";
 import SwiperSlider from "../components/Swiper";
 import btnRemoveSvg from "../assets/img/btnRemove.svg";
 import searchSvg from "../assets/img/search.svg";
-import { ICartItems, ISneakers } from "../App";
+import { ISneakers } from "../App";
 import { useSelector } from "react-redux";
-import { selectCartAdd } from "../redux/cart/selector";
+import { selectCartAdd, selectCartData } from "../redux/cart/selector";
 
 type HomeProps = {
   items: ISneakers[] | [];
@@ -38,9 +38,7 @@ const Home: React.FC<HomeProps> = ({
           price={item.price}
           imageUrl={item.imageUrl}
           loading={isLoading}
-          onPlus={true}
           isFavorite={item.isFavorite}
-          isAddToCart={item.isAddToCart}
         />
       )
     );

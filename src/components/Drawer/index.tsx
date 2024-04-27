@@ -4,30 +4,30 @@ import Info from "../Info";
 import { useCart } from "../../hooks/useCart";
 import btnRemove from "../../assets/img/btnRemove.svg";
 import arrowSvg from "../../assets/img/arrow.svg";
-import { ISneakers, ICartItems } from "../../App";
+import { ISneakers } from "../../App";
 import styles from "./Drawer.module.scss";
 import { useDispatch, useSelector } from "react-redux";
 import { addNewOrder } from "../../redux/order/orderSlice";
 import { NewOrderParam } from "../../redux/order/orderSlice";
 import { selectOrderData } from "../../redux/order/selector";
-import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
+
 import { selectSneakerData } from "../../redux/sneaker/selector";
+// import { addNewCartItem } from "../../redux/cart/cartSlice";
 
 type DrawerProps = {
   onClose: (value: React.SetStateAction<boolean>) => void;
   opened: boolean;
-  items: ICartItems[];
+  items: ISneakers[];
 };
 
 const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
   const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
 
-  const { totalPrice, deleteCart } = useCart();
+  const { totalPrice, deleteCartItem, clearCartItems } = useCart();
 
   const { order, isAddNewOrder } = useSelector(selectOrderData);
   const dispatch = useDispatch();
   const { items: sneakers } = useSelector(selectSneakerData);
-  const handleAddNewCart = useToggleSneakerOpt(sneakers, true);
 
   const handleNewOrder = React.useCallback(
     (cartItems: NewOrderParam) => {
@@ -56,7 +56,7 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
         {items.length > 0 ? (
           <div className="d-flex flex-column flex cartNotEpty">
             <div className={styles.items}>
-              {items.map((obj: ICartItems) => (
+              {items.map((obj: ISneakers) => (
                 <div
                   key={obj.id}
                   className="cartItem d-flex align-center mb-20"
@@ -71,7 +71,7 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
                     <b>{obj.price} руб.</b>
                   </div>
                   <img
-                    onClick={() => deleteCart(obj.parentId)}
+                    onClick={() => deleteCartItem(obj.id)}
                     className="removeBtn"
                     src={btnRemove}
                     alt="Remove"
@@ -93,7 +93,10 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
                 </li>
               </ul>
               <button
-                onClick={() => handleNewOrder(items as any)}
+                onClick={() => {
+                  handleNewOrder(items as any);
+                  clearCartItems();
+                }}
                 className="greenButton"
               >
                 Оформить заказ <img src={arrowSvg} alt="Arrow" />

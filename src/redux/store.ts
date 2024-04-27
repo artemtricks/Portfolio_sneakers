@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import sneaker from "./sneaker/sneakerSlice";
 import order from "./order/orderSlice";
 import cart from "./cart/cartSlice";
+
 import { useDispatch } from "react-redux";
 
 export const store = configureStore({

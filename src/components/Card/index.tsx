@@ -6,11 +6,14 @@ import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
 import { useDispatch, useSelector } from "react-redux";
-import { selectFavoriteData } from "../../redux/sneaker/selector";
-import { useToggleSneakerOpt } from "../../hooks/useToggleSneakerOpt";
-import { addNewCartItem, deleteCartItem } from "../../redux/cart/cartSlice";
+
+// import { addNewCartItem, deleteCartItem } from "../../redux/cart/cartSlice";
 import { selectCartAdd } from "../../redux/cart/selector";
 import { useCart } from "../../hooks/useCart";
+import sneaker from "../../assets/sneakers/1.jpg";
+import { addCart } from "../../redux/cart/cartSlice";
+import { toggleFavorite } from "../../redux/sneaker/sneakerSlice";
+import { ISneakers } from "../../App";
 
 type CardProps = {
   id: number;
@@ -18,9 +21,7 @@ type CardProps = {
   title: string;
   price: number;
   loading?: boolean;
-  isFavorite?: boolean;
-  isAddToCart?: boolean;
-  onPlus?: boolean;
+  isFavorite: boolean;
 };
 
 const Card: React.FC<CardProps> = ({
@@ -28,45 +29,17 @@ const Card: React.FC<CardProps> = ({
   imageUrl,
   title,
   price,
-  onPlus,
   loading,
   isFavorite,
-  isAddToCart,
 }) => {
-  const sneakers = useSelector(selectFavoriteData);
+  const dispatch = useDispatch();
 
-  const handleToggleFavorite = useToggleSneakerOpt(sneakers);
-  const { cartItems, deleteCart, handleCart } = useCart();
-  // const cart = useSelector(selectCartAdd);
+  const { cartItems, handleCart, minusCartItem } = useCart();
+  const itemCount = cartItems.find((item) => item.id === id)?.count;
 
-  // const handleCart = React.useCallback(
-  //   (id: number) => {
-  //     const sneakerItem = sneakers.find((item) => item.id === id);
-  //     if (sneakerItem) {
-  //       //@ts-ignore
-  //       dispatch(addNewCartItem(sneakerItem));
-  //     }
-  //   },
-  //   [sneakers, dispatch]
-  // );
-
-  // const deleteCart = React.useCallback(
-  //   (id: number) => {
-  //     const sneakerItem = cart.find((item) => item.parentId === id);
-  //     if (sneakerItem) {
-  //       //@ts-ignore
-  //       dispatch(deleteCartItem(sneakerItem));
-  //     }
-  //   },
-  //   [cart, dispatch]
-  // );
-
-  // const add = cart.find((item) => {
-  //   if (item.parentId === id) {
-  //     return item.isAddToCart;
-  //   }
-  // });
-
+  const handleToggleFavorite = (params: Omit<ISneakers, "count">) => {
+    dispatch(toggleFavorite(params));
+  };
   return (
     <div className={styles.card}>
       {loading ? (
@@ -75,31 +48,34 @@ const Card: React.FC<CardProps> = ({
         <>
           <div
             className={styles.favorite}
-            onClick={() => handleToggleFavorite(id)}
+            onClick={() =>
+              handleToggleFavorite({
+                id,
+                imageUrl,
+                price,
+                title,
+                isFavorite,
+              })
+            }
           >
             <img
               src={isFavorite ? heartLikeImg : heartUnLikeImg}
               alt="Unlicked"
             />
           </div>
-          <img width={160} height={150} src={""} alt="sneakers" />
+          <img width={160} height={150} src={sneaker} alt="sneakers" />
           <h5>{title}</h5>
           <div className="d-flex justify-between align-center">
             <div className="d-flex flex-column">
               <span>Цена:</span>
               <b>{price} руб.</b>
+              <span>{itemCount}</span>
             </div>
-            {onPlus && (
-              <>
-                <img
-                  className={styles.plus}
-                  onClick={() => handleCart(id)}
-                  src={btnPlusImg}
-                  alt="Plus"
-                />
-                <button onClick={() => deleteCart(id)}>delete</button>
-              </>
-            )}
+
+            <div>
+              <button onClick={() => handleCart(id)}>plus</button>
+              <button onClick={() => minusCartItem(id)}>minus</button>
+            </div>
           </div>
         </>
       )}

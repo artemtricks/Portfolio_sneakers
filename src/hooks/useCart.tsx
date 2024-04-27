@@ -1,40 +1,63 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import { selectCartData } from "../redux/cart/selector";
-import { deleteCartItem } from "../redux/cart/cartSlice";
-import { addNewCartItem } from "../redux/cart/cartSlice";
 import { selectSneakerData } from "../redux/sneaker/selector";
+import {
+  addCart,
+  deleteCart,
+  clearCart,
+  minusCart,
+} from "../redux/cart/cartSlice";
 
 export const useCart = () => {
   const dispatch = useDispatch();
   const { cart: cartItems } = useSelector(selectCartData);
   const { items: sneakers } = useSelector(selectSneakerData);
 
-  const totalPrice = cartItems.reduce((acc, curr) => {
-    return acc + curr.price;
+  const totalPrice: number = cartItems.reduce((acc, curr) => {
+    return acc + curr.price * curr.count;
   }, 0);
 
   const handleCart = React.useCallback(
     (id: number) => {
       const sneakerItem = sneakers.find((item) => item.id === id);
       if (sneakerItem) {
-        //@ts-ignore
-        dispatch(addNewCartItem(sneakerItem));
+        dispatch(addCart(sneakerItem));
       }
     },
     [sneakers, dispatch]
   );
 
-  const deleteCart = React.useCallback(
+  const minusCartItem = React.useCallback(
     (id: number) => {
-      const sneakerItem = cartItems.find((item) => item.parentId === id);
+      const sneakerItem = sneakers.find((item) => item.id === id);
       if (sneakerItem) {
-        //@ts-ignore
-        dispatch(deleteCartItem(sneakerItem));
+        dispatch(minusCart(sneakerItem));
+      }
+    },
+    [sneakers, dispatch]
+  );
+
+  const deleteCartItem = React.useCallback(
+    (id: number) => {
+      const sneakerItem = sneakers.find((item) => item.id === id);
+      if (sneakerItem) {
+        dispatch(deleteCart(sneakerItem.id));
       }
     },
     [cartItems, dispatch]
   );
 
-  return { cartItems, totalPrice, deleteCart, handleCart };
+  const clearCartItems = React.useCallback(() => {
+    dispatch(clearCart());
+  }, [cartItems, dispatch]);
+
+  return {
+    cartItems,
+    totalPrice,
+    handleCart,
+    deleteCartItem,
+    clearCartItems,
+    minusCartItem,
+  };
 };

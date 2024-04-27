@@ -14,10 +14,21 @@ type HeaderProps = {
 
 const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
   const { items } = useSelector(selectSneakerData);
-  const { totalPrice } = useCart();
+  const { totalPrice, cartItems } = useCart();
   const totalCountFavoriteItem = items.filter((item) => {
     return item.isFavorite === true;
   });
+
+  const cartRef = React.useRef(false);
+
+  React.useEffect(() => {
+    if (cartRef.current) {
+      const data = JSON.stringify(cartItems);
+      window.localStorage.setItem("cart", data);
+    }
+
+    cartRef.current = true;
+  }, [cartItems]);
 
   return (
     <header className="d-flex justify-between align-center p-40">

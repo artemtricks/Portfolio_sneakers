@@ -13,11 +13,10 @@ export interface FavoriteSneakerParam {
 }
 
 export interface CartSneakerParam {
-  isAddToCart: boolean;
   id: number;
 }
 
-export const fetchSnekers = createAsyncThunk<ISneakers[]>(
+export const fetchSneakers = createAsyncThunk<ISneakers[]>(
   "sneakers/fetchSneakers",
   async () => {
     const response = await axios.get<ISneakers[]>(
@@ -26,30 +25,6 @@ export const fetchSnekers = createAsyncThunk<ISneakers[]>(
     return response.data as ISneakers[];
   }
 );
-
-export const addNewFavoriteSneaker = createAsyncThunk<
-  ISneakers,
-  FavoriteSneakerParam
->("sneakers/addNewFavoriteSneaker", async (params) => {
-  const { id, isFavorite } = params;
-  const response = await axios.patch<ISneakers>(
-    `https://1047012a1579016a.mokky.dev/items/${id}`,
-    { isFavorite: !isFavorite }
-  );
-  return response.data as ISneakers;
-});
-
-// export const addNewCartItem = createAsyncThunk<ISneakers, CartSneakerParam>(
-//   "sneakers/addNewCartItem",
-//   async (params) => {
-//     const { id, isAddToCart } = params;
-//     const response = await axios.patch<ISneakers>(
-//       `https://1047012a1579016a.mokky.dev/items/${id}`,
-//       { isAddToCart: !isAddToCart }
-//     );
-//     return response.data as ISneakers;
-//   }
-// );
 
 const initialState: SneakersSliceState = {
   items: [],
@@ -60,49 +35,36 @@ const sneakerSlice = createSlice({
   name: "sneaker",
   initialState,
   reducers: {
-    setItems(state, action) {
-      state.items = action.payload;
+    toggleFavorite: (state, action) => {
+      state.items = state.items.map((item) => {
+        if (item.id === action.payload.id) {
+          return { ...item, isFavorite: !action.payload.isFavorite };
+        }
+        return item;
+      });
     },
   },
   extraReducers: (builder) => {
-    builder.addCase(fetchSnekers.pending, (state) => {
+    builder.addCase(fetchSneakers.pending, (state) => {
       state.status = "loading";
       console.log(state.status);
       state.items = [];
     });
     builder.addCase(
-      fetchSnekers.fulfilled,
+      fetchSneakers.fulfilled,
       (state, action: PayloadAction<ISneakers[]>) => {
         state.items = action.payload;
         state.status = "success";
         console.log(state.status);
       }
     );
-    builder.addCase(fetchSnekers.rejected, (state) => {
+    builder.addCase(fetchSneakers.rejected, (state) => {
       state.status = "error";
       state.items = [];
       console.log(state.status);
     });
-    builder.addCase(addNewFavoriteSneaker.fulfilled, (state, action) => {
-      const updatedSneaker = action.payload;
-      const index = state.items.findIndex(
-        (sneaker: ISneakers) => sneaker.id === updatedSneaker.id
-      );
-
-      state.items[index] = updatedSneaker;
-      console.log(state.status);
-    });
-    // builder.addCase(addNewCartItem.fulfilled, (state, action) => {
-    //   const updatedSneaker = action.payload;
-    //   const index = state.items.findIndex(
-    //     (sneaker: ISneakers) => sneaker.id === updatedSneaker.id
-    //   );
-
-    //   state.items[index] = updatedSneaker;
-    //   console.log(state.status);
-    // });
   },
 });
 
-export const { setItems } = sneakerSlice.actions;
+export const { toggleFavorite } = sneakerSlice.actions;
 export default sneakerSlice.reducer;

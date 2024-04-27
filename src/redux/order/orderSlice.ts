@@ -19,8 +19,6 @@ export interface NewOrderParam {
   price: number;
   title: string;
   isFavorite: boolean;
-  isAddToCart: boolean;
-  parentId: number;
 }
 
 export const fetchOrders = createAsyncThunk<Orders[]>(

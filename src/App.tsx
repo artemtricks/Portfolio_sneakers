@@ -8,8 +8,8 @@ import { useAppDispatch } from "./redux/store";
 import Orders from "./pages/Orders";
 import { NotFound } from "./pages/NotFound";
 import { selectSneakerData } from "./redux/sneaker/selector";
-import { fetchSnekers } from "./redux/sneaker/sneakerSlice";
-import { fetchCart } from "./redux/cart/cartSlice";
+import { fetchSneakers } from "./redux/sneaker/sneakerSlice";
+// import { fetchCart } from "./redux/cart/cartSlice";
 import Favorites from "./pages/Favorites";
 import { selectCartData } from "./redux/cart/selector";
 
@@ -19,11 +19,7 @@ export interface ISneakers {
   price: number;
   title: string;
   isFavorite: boolean;
-  isAddToCart: boolean;
-}
-
-export interface ICartItems extends ISneakers {
-  parentId: number;
+  count: number;
 }
 
 const App = () => {
@@ -34,12 +30,12 @@ const App = () => {
   const [cartOpened, setCartOpened] = React.useState<boolean>(false);
 
   React.useEffect(() => {
-    dispatch(fetchSnekers());
+    dispatch(fetchSneakers());
   }, [dispatch]);
 
-  React.useEffect(() => {
-    dispatch(fetchCart());
-  }, [dispatch]);
+  // React.useEffect(() => {
+  //   dispatch(fetchCart());
+  // }, [dispatch]);
 
   const onChangeSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);
