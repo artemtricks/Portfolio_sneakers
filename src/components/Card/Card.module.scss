@@ -36,3 +36,32 @@
     font-size: 13px;
   }
 }
+
+.info {
+  display: flex;
+  flex-direction: column;
+  margin-top: 5px;
+}
+
+.count {
+  font-size: 20px;
+  opacity: 0.5;
+  text-transform: uppercase;
+}
+
+.groupBtnCounter {
+  margin-top: 5px;
+  display: flex;
+  justify-content: space-between;
+  background-color: #f3f3f3;
+  padding: 8px 8px;
+  border-radius: 10px;
+
+  .btnCounter {
+    background-color: white;
+    padding: 7px 7px;
+    border-radius: 10px;
+    border: none;
+    cursor: pointer;
+  }
+}

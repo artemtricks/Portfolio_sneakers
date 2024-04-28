@@ -9,7 +9,6 @@ import Orders from "./pages/Orders";
 import { NotFound } from "./pages/NotFound";
 import { selectSneakerData } from "./redux/sneaker/selector";
 import { fetchSneakers } from "./redux/sneaker/sneakerSlice";
-// import { fetchCart } from "./redux/cart/cartSlice";
 import Favorites from "./pages/Favorites";
 import { selectCartData } from "./redux/cart/selector";
 
@@ -32,10 +31,6 @@ const App = () => {
   React.useEffect(() => {
     dispatch(fetchSneakers());
   }, [dispatch]);
-
-  // React.useEffect(() => {
-  //   dispatch(fetchCart());
-  // }, [dispatch]);
 
   const onChangeSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);

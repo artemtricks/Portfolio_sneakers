@@ -2,10 +2,10 @@ import React from "react";
 import Card from "../components/Card";
 import { useSelector } from "react-redux";
 import { selectSneakerData } from "../redux/sneaker/selector";
+import { selectFavoriteData } from "../redux/favorite/selectors";
 
 function Favorites() {
-  const { items: sneakers } = useSelector(selectSneakerData);
-  const isAddFavorite = sneakers.filter((item) => item.isFavorite === true);
+  const { favorite } = useSelector(selectFavoriteData);
 
   return (
     <div className="content p-40">
@@ -13,7 +13,7 @@ function Favorites() {
         <h1>Мои закладки</h1>
       </div>
       <div className="d-flex flex-wrap">
-        {isAddFavorite.map((item, index) => (
+        {favorite.map((item, index) => (
           <Card
             key={index}
             id={item.id}

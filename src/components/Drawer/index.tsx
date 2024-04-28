@@ -11,9 +11,6 @@ import { addNewOrder } from "../../redux/order/orderSlice";
 import { NewOrderParam } from "../../redux/order/orderSlice";
 import { selectOrderData } from "../../redux/order/selector";
 
-import { selectSneakerData } from "../../redux/sneaker/selector";
-// import { addNewCartItem } from "../../redux/cart/cartSlice";
-
 type DrawerProps = {
   onClose: (value: React.SetStateAction<boolean>) => void;
   opened: boolean;
@@ -21,13 +18,10 @@ type DrawerProps = {
 };
 
 const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
-  const [orderId, setOrderId] = React.useState<ISneakers[] | []>([]);
-
   const { totalPrice, deleteCartItem, clearCartItems } = useCart();
 
   const { order, isAddNewOrder } = useSelector(selectOrderData);
   const dispatch = useDispatch();
-  const { items: sneakers } = useSelector(selectSneakerData);
 
   const handleNewOrder = React.useCallback(
     (cartItems: NewOrderParam) => {
@@ -39,7 +33,6 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
     [dispatch, order]
   );
 
-  console.log(isAddNewOrder);
   return (
     <div className={`${styles.overlay} ${opened ? styles.overlayVisible : ""}`}>
       <div className={styles.drawer}>
@@ -106,7 +99,7 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
         ) : (
           <Info
             isAddNewOrder={isAddNewOrder}
-            orderId={orderId}
+            orderId={[]}
             onClose={() => onClose(false)}
           />
         )}

@@ -6,13 +6,13 @@ import searchSvg from "../assets/img/search.svg";
 import { ISneakers } from "../App";
 import { useSelector } from "react-redux";
 import { selectCartAdd, selectCartData } from "../redux/cart/selector";
+import { selectFavoriteData } from "../redux/favorite/selectors";
 
 type HomeProps = {
   items: ISneakers[] | [];
   serchValue: string;
   setSearchValue: React.Dispatch<React.SetStateAction<string>>;
   onChangeSearchInput: (event: React.ChangeEvent<HTMLInputElement>) => void;
-
   isLoading: boolean;
 };
 
@@ -21,26 +21,31 @@ const Home: React.FC<HomeProps> = ({
   serchValue,
   setSearchValue,
   onChangeSearchInput,
-
   isLoading,
 }) => {
+  const { favorite } = useSelector(selectFavoriteData);
   const renderItems = () => {
     const filteredItems = items.filter((item) =>
       item.title.toLowerCase().includes(serchValue.toLowerCase())
     );
 
     return (isLoading ? [...Array(10).fill({})] : filteredItems).map(
-      (item, index) => (
-        <Card
-          key={index}
-          id={item.id}
-          title={item.title}
-          price={item.price}
-          imageUrl={item.imageUrl}
-          loading={isLoading}
-          isFavorite={item.isFavorite}
-        />
-      )
+      (item, index) => {
+        const isFavorite =
+          item.id === favorite.find((fav) => fav.id === item.id)?.id;
+
+        return (
+          <Card
+            key={index}
+            id={item.id}
+            title={item.title}
+            price={item.price}
+            imageUrl={item.imageUrl}
+            loading={isLoading}
+            isFavorite={isFavorite}
+          />
+        );
+      }
     );
   };
 

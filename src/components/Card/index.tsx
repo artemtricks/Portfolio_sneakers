@@ -1,19 +1,13 @@
 import React from "react";
 import styles from "./Card.module.scss";
-import btnPlusImg from "../../assets/img/btn-plus.svg";
-import btnDoneImg from "../../assets/img/btn-checked.svg";
 import heartLikeImg from "../../assets/img/heart-liked.svg";
 import heartUnLikeImg from "../../assets/img/heart-unliked.svg";
 import Skeleton from "./Skeleton";
 import { useDispatch, useSelector } from "react-redux";
-
-// import { addNewCartItem, deleteCartItem } from "../../redux/cart/cartSlice";
-import { selectCartAdd } from "../../redux/cart/selector";
 import { useCart } from "../../hooks/useCart";
-import sneaker from "../../assets/sneakers/1.jpg";
-import { addCart } from "../../redux/cart/cartSlice";
-import { toggleFavorite } from "../../redux/sneaker/sneakerSlice";
+import { toggleFavorite } from "../../redux/favorite/sliceFavorite";
 import { ISneakers } from "../../App";
+import { deleteCart } from "../../redux/cart/cartSlice";
 
 type CardProps = {
   id: number;
@@ -34,7 +28,7 @@ const Card: React.FC<CardProps> = ({
 }) => {
   const dispatch = useDispatch();
 
-  const { cartItems, handleCart, minusCartItem } = useCart();
+  const { cartItems, handleCart, minusCartItem, deleteCartItem } = useCart();
   const itemCount = cartItems.find((item) => item.id === id)?.count;
 
   const handleToggleFavorite = (params: Omit<ISneakers, "count">) => {
@@ -63,18 +57,57 @@ const Card: React.FC<CardProps> = ({
               alt="Unlicked"
             />
           </div>
-          <img width={160} height={150} src={sneaker} alt="sneakers" />
-          <h5>{title}</h5>
-          <div className="d-flex justify-between align-center">
-            <div className="d-flex flex-column">
-              <span>Цена:</span>
+          <img
+            width={160}
+            height={150}
+            src={process.env.PUBLIC_URL + `/sneakers/${id}.jpg`}
+            alt="sneakers"
+          />
+          <span>{title}</span>
+          <div className={styles.info}>
+            <div className="d-flex ">
+              <span style={{ marginRight: 5, marginBottom: 5 }}>Цена:</span>
               <b>{price} руб.</b>
-              <span>{itemCount}</span>
             </div>
 
-            <div>
-              <button onClick={() => handleCart(id)}>plus</button>
-              <button onClick={() => minusCartItem(id)}>minus</button>
+            <div className={styles.groupBtnCounter}>
+              {!!itemCount && itemCount >= 1 ? (
+                <button
+                  className={styles.btnCounter}
+                  onClick={() => handleCart(id)}
+                >
+                  plus
+                </button>
+              ) : (
+                <button
+                  className={styles.btnCounter}
+                  onClick={() => handleCart(id)}
+                >
+                  add
+                </button>
+              )}
+              <span className={styles.count}>
+                {!!itemCount && itemCount >= 1 && itemCount}
+              </span>
+              {!!itemCount && itemCount >= 1 && (
+                <>
+                  {!!itemCount && itemCount > 1 ? (
+                    <button
+                      className={styles.btnCounter}
+                      onClick={() => minusCartItem(id)}
+                    >
+                      minus
+                    </button>
+                  ) : (
+                    <button
+                      className={styles.btnCounter}
+                      onClick={() => deleteCartItem(id)}
+                    >
+                      delete
+                    </button>
+                  )}
+                </>
+              )}
             </div>
           </div>
         </>

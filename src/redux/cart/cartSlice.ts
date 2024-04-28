@@ -4,14 +4,12 @@ import { getCartFromLocalStorage } from "../../utils/getCartFromLocalStorage";
 
 export interface CartSneakerState {
   cart: ISneakers[];
-  status: "loading" | "success" | "error" | "";
 }
 
 const items = getCartFromLocalStorage();
 
 const initialState: CartSneakerState = {
   cart: items,
-  status: "",
 };
 
 const cartSlice = createSlice({

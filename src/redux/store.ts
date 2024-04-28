@@ -2,6 +2,7 @@ import { configureStore } from "@reduxjs/toolkit";
 import sneaker from "./sneaker/sneakerSlice";
 import order from "./order/orderSlice";
 import cart from "./cart/cartSlice";
+import favorite from "./favorite/sliceFavorite";
 
 import { useDispatch } from "react-redux";
 
@@ -10,6 +11,7 @@ export const store = configureStore({
     sneaker,
     order,
     cart,
+    favorite,
   },
 });
 

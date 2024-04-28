@@ -7,6 +7,7 @@ import { useSelector } from "react-redux";
 import { selectSneakerData } from "../redux/sneaker/selector";
 import heartSvg from "../assets/img/favorite.svg";
 import { useCart } from "../hooks/useCart";
+import { selectFavoriteData } from "../redux/favorite/selectors";
 
 type HeaderProps = {
   setCartOpened: React.Dispatch<React.SetStateAction<boolean>>;
@@ -15,11 +16,15 @@ type HeaderProps = {
 const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
   const { items } = useSelector(selectSneakerData);
   const { totalPrice, cartItems } = useCart();
-  const totalCountFavoriteItem = items.filter((item) => {
-    return item.isFavorite === true;
-  });
+  const { favorite } = useSelector(selectFavoriteData);
+  console.log(favorite, "dwdwdwdwdwdw");
+
+  const totalCountFavoriteItem = items.filter(
+    (item) => item.isFavorite === true
+  );
 
   const cartRef = React.useRef(false);
+  const favoriteRef = React.useRef(false);
 
   React.useEffect(() => {
     if (cartRef.current) {
@@ -28,7 +33,16 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
     }
 
     cartRef.current = true;
-  }, [cartItems]);
+  }, [favorite]);
+
+  React.useEffect(() => {
+    if (favoriteRef.current) {
+      const data = JSON.stringify(favorite);
+      window.localStorage.setItem("favorite", data);
+    }
+
+    favoriteRef.current = true;
+  }, [favorite]);
 
   return (
     <header className="d-flex justify-between align-center p-40">
@@ -45,9 +59,7 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
         <li className="mr-10 cu-p d-flex align-center">
           <Link className="d-flex" to="/favorites">
             <img width={18} height={18} src={heartSvg} alt="Пользователь" />
-            {totalCountFavoriteItem.length > 0 && (
-              <span>{totalCountFavoriteItem.length} шт.</span>
-            )}
+            {favorite.length > 0 && <span>{favorite.length} шт.</span>}
           </Link>
         </li>
         <li
