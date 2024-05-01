@@ -21,6 +21,7 @@ function Favorites() {
             price={item.price}
             imageUrl={item.imageUrl}
             isFavorite={item.isFavorite}
+            isAddToCardBtnGroup={false}
           />
         ))}
       </div>

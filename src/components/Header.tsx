@@ -17,11 +17,6 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
   const { items } = useSelector(selectSneakerData);
   const { totalPrice, cartItems } = useCart();
   const { favorite } = useSelector(selectFavoriteData);
-  console.log(favorite, "dwdwdwdwdwdw");
-
-  const totalCountFavoriteItem = items.filter(
-    (item) => item.isFavorite === true
-  );
 
   const cartRef = React.useRef(false);
   const favoriteRef = React.useRef(false);
@@ -33,7 +28,7 @@ const Header: React.FC<HeaderProps> = ({ setCartOpened }) => {
     }
 
     cartRef.current = true;
-  }, [favorite]);
+  }, [cartItems]);
 
   React.useEffect(() => {
     if (favoriteRef.current) {

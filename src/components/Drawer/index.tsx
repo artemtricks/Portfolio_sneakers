@@ -54,14 +54,18 @@ const Drawer: React.FC<DrawerProps> = ({ onClose, opened, items }) => {
                   key={obj.id}
                   className="cartItem d-flex align-center mb-20"
                 >
-                  <div
-                    style={{ backgroundImage: `url(${obj.imageUrl})` }}
+                  <img
+                    src={process.env.PUBLIC_URL + `/sneakers/${obj.id}.jpg`}
                     className="cartItemImg"
-                  ></div>
+                  />
 
                   <div className="mr-20 flex">
                     <p className="mb-5">{obj.title}</p>
-                    <b>{obj.price} руб.</b>
+                    <b>{obj.price * obj.count} руб.</b>
+                  </div>
+                  <div style={{ marginRight: 10 }}>
+                    <b>x</b>
+                    <b>{obj.count}</b>
                   </div>
                   <img
                     onClick={() => deleteCartItem(obj.id)}

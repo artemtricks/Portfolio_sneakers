@@ -11,6 +11,7 @@ import { selectSneakerData } from "./redux/sneaker/selector";
 import { fetchSneakers } from "./redux/sneaker/sneakerSlice";
 import Favorites from "./pages/Favorites";
 import { selectCartData } from "./redux/cart/selector";
+import { fetchOrders } from "./redux/order/orderSlice";
 
 export interface ISneakers {
   id: number;
@@ -31,6 +32,10 @@ const App = () => {
   React.useEffect(() => {
     dispatch(fetchSneakers());
   }, [dispatch]);
+
+  React.useEffect(() => {
+    dispatch(fetchOrders());
+  }, []);
 
   const onChangeSearchInput = (event: React.ChangeEvent<HTMLInputElement>) => {
     setSearchValue(event.target.value);

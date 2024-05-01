@@ -36,15 +36,15 @@ export const addNewOrder = createAsyncThunk<
   NewOrderParam,
   { state: OrderSneakerState }
 >("order/addNewOrders", async (CartItems, { getState }) => {
-  const state = getState();
+  // const state = getState();
   const response = await axios.post(
     `https://1047012a1579016a.mokky.dev/order`,
     { items: CartItems }
   );
-  const createOrder = {
-    items: [...(state.order[0] as any), response.data],
-  };
-  return createOrder as any;
+  // const createOrder = {
+  //   items: [...(state.order[0] as any), response.data],
+  // };
+  return response.data as any;
 });
 
 const initialState: OrderSneakerState = {
@@ -64,7 +64,6 @@ const orderSlice = createSlice({
   extraReducers: (builder) => {
     builder.addCase(fetchOrders.pending, (state) => {
       state.status = "loading";
-      console.log(state.status);
       state.order = [];
     });
     builder.addCase(
@@ -72,12 +71,10 @@ const orderSlice = createSlice({
       (state, actions: PayloadAction<Orders[]>) => {
         state.order = actions.payload;
         state.status = "success";
-        console.log(state.status);
       }
     );
     builder.addCase(fetchOrders.rejected, (state) => {
       state.status = "error";
-      console.log(state.status);
       state.order = [];
     });
     builder.addCase(addNewOrder.pending, (state) => {
@@ -85,8 +82,8 @@ const orderSlice = createSlice({
     });
     builder.addCase(
       addNewOrder.fulfilled,
-      (state, actions: PayloadAction<any>) => {
-        state.order[0] = actions.payload;
+      (state, action: PayloadAction<any>) => {
+        state.order.push(action.payload);
         state.isAddNewOrder = false;
       }
     );

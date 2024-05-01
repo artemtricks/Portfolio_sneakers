@@ -43,12 +43,6 @@
   margin-top: 5px;
 }
 
-.count {
-  font-size: 20px;
-  opacity: 0.5;
-  text-transform: uppercase;
-}
-
 .groupBtnCounter {
   margin-top: 5px;
   display: flex;
@@ -56,8 +50,16 @@
   background-color: #f3f3f3;
   padding: 8px 8px;
   border-radius: 10px;
+  align-items: center;
+
+  .count {
+    font-weight: 400;
+    font-size: large;
+  }
 
   .btnCounter {
+    font-size: medium;
+    color: #898989;
     background-color: white;
     padding: 7px 7px;
     border-radius: 10px;
